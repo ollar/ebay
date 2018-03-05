@@ -10,8 +10,9 @@ logging.basicConfig(level=logging.INFO)
 
 
 class WS_Handler:
-    def __init__(self):
+    def __init__(self, loop):
         self.connections = {}
+        self.loop = loop
         logging.info('server starts')
 
     async def __call__(self, websocket, path):
@@ -32,12 +33,12 @@ class WS_Handler:
 
                 self.connections[path][data.get('uid')] = websocket
 
-                await self.dispatch_ws_types(data, path)
+                asyncio.run_coroutine_threadsafe(self.dispatch_ws_types(data, path), self.loop)
 
         except websockets.exceptions.ConnectionClosed:
-            ws = self._getConnection(data.get('uid', ''), path)
-            if ws and not ws.open:
-                del self.connections[path][data['uid']]
+            # ws = self._getConnection(data.get('uid', ''), path)
+            # if ws and not ws.open:
+            #     del self.connections[path][data['uid']]
 
             logging.info('closed 1001')
 
@@ -100,7 +101,7 @@ class WS_Handler:
 
 loop = asyncio.get_event_loop()
 # loop.set_debug(enabled=True)
-ws_handler = WS_Handler()
+ws_handler = WS_Handler(loop=loop)
 
 ws_server = websockets.serve(ws_handler, host='localhost', port=8765, loop=loop)
 future = asyncio.ensure_future(ws_server)
