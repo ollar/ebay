@@ -3,8 +3,6 @@ import { inject as service } from '@ember/service';
 
 import { hash } from 'rsvp';
 
-import {uuid} from 'ember-cli-uuid';
-
 export default Route.extend({
     websockets: service(),
 
@@ -23,7 +21,7 @@ export default Route.extend({
     handleOnOpen() {
         this.get('socket').send({
             type: 'enterRoom',
-            uid: uuid(),
+            uid: this.get('me.id'),
         }, true);
     },
 
@@ -42,7 +40,9 @@ export default Route.extend({
                     return false;
                 }
 
-                return me;
+                this.set('me', me.get('firstObject'));
+
+                return me.get('firstObject');
             })
         });
     },
@@ -54,7 +54,7 @@ export default Route.extend({
     deactivate() {
         this._super(...arguments);
 
-        const socket = this.get('socket');
+        // const socket = this.get('socket');
 
         // socket.off('open', this.myOpenHandler);
         // socket.off('message', this.myMessageHandler);

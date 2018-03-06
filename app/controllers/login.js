@@ -6,7 +6,7 @@ export default Controller.extend({
 
     actions: {
         submit() {
-            console.log(this.get('username'));
+            if (!this.get('username')) return;
 
             const me = this.get('store').createRecord('me', {
                 username: this.get('username'),
