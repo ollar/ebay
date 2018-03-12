@@ -63,16 +63,20 @@ class WS_Handler:
             return await ws.send(json.dumps(data))
 
     async def _on_enter_room(self, data, path):
+        myuid = data.get('uid')
         for key in self.connections[path].keys():
-            await self.sendData(key, path, {
-                'type': 'newUser',
-                'uid': data.get('uid'),
-            })
+            if myuid != key:
+                await self.sendData(key, path, {
+                    'type': 'newUser',
+                    'uid': myuid,
+                    'username': data.get('username'),
+                })
 
     async def _on_offer(self, data, path):
         await self.sendData(data.get('toUid'), path, {
             'type': 'offerFrom',
             'fromUid': data.get('fromUid'),
+            'username': data.get('username'),
             'offer': data.get('offer'),
         })
 
@@ -91,6 +95,7 @@ class WS_Handler:
         })
 
     async def _on_channel_close(self, data, path):
+        print('11')
         for key in self.connections[path].keys():
             await self.sendData(key, path, {
                 'type': 'channelClose',
