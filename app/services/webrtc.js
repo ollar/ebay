@@ -103,7 +103,7 @@ export default Service.extend({
                 toUid: toUid,
                 offer: str(offer),
             }));
-        }).catch(e => console.log(e));
+        }).catch(e => trace(e));
     },
 
     handleOffer(data) {
@@ -122,7 +122,7 @@ export default Service.extend({
                 toUid: data.fromUid,
                 answer: str(answer),
             }));
-        }).catch(e => console.log(e));
+        }).catch(e => trace(e));
     },
 
     handleAnswer(data) {
@@ -139,23 +139,22 @@ export default Service.extend({
     handleIceCandidate(data) {
         const peer = this.get('store').peekRecord('user', data.fromUid);
 
-        // FIXME: bug there
-        // if (!peer) return;
-
         const connection = peer.get('connection');
         connection.addIceCandidate(new RTCIceCandidate(JSON.parse(data.iceCandidate)));
     },
 
     dropConnection(toUid) {
-        console.log('asdasdasdasd 2222222')
         const peer = this.get('store').peekRecord('user', toUid);
+
+        if (!peer) return;
+
         let connection = peer.get('connection');
         let channel = peer.get('channel');
 
         if (channel) channel.close();
         if (connection) connection.close();
 
-        peer.deleteRecord();
+        peer.unloadRecord();
         // if (peers.length === 0) Sync.trigger('channelClose');
     },
 
