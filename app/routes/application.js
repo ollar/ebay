@@ -1,12 +1,15 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 
+import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
+
 import str from '../utils/str';
 
 import { hash } from 'rsvp';
 
-export default Route.extend({
+export default Route.extend(ApplicationRouteMixin, {
     webrtc: service(),
+    session: service(),
 
     activate() {
         this._super(...arguments);
@@ -22,6 +25,8 @@ export default Route.extend({
         this.set('socket', socket);
 
         this.get('webrtc')._setWS(socket);
+
+        console.log(this.get('session'))
 
         window.addEventListener('beforeunload', () => {
             this.handleOnClose();

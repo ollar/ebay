@@ -3,16 +3,23 @@
 </h1>
 
 <form {{action 'submit' on="submit"}}>
-    <div class="form-line">
-        {{input value=title}}
+    <div class="input-group fluid">
+        <label for="title">{{t 'create-product.form.title.label'}}</label>
+        {{input id="title" value=model.title}}
     </div>
 
-    <div class="form-line">
-        {{textarea value=description}}
+    <div class="input-group fluid">
+        <label for="description">{{t 'create-product.form.description.label'}}</label>
+        {{textarea id="description" value=model.description}}
     </div>
 
-    <div class="buttons-wrapper">
-        <button typ="submit">
+    <div class="input-group fluid">
+        <label for="price">{{t 'create-product.form.price.label'}}</label>
+        {{input id="price" type="number" step=".01" value=model.price}}
+    </div>
+
+    <div class="button-group">
+        <button type="submit">
             {{t 'buttons.submit'}}
         </button>
     </div>
