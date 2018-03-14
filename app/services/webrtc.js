@@ -39,18 +39,13 @@ function _onSendChannelStateChange(channel) {
 
 export default Service.extend({
     store: service(),
+    session: service(),
 
-    me: computed(function() {
-        return this.get('store').peekAll('me').get('firstObject');
-    }),
+    me: computed.readOnly('session.data.authenticated'),
 
-    UID: computed('me', function() {
-        return this.get('me.id');
-    }),
+    UID: computed.readOnly('me.id'),
 
-    _setWS(ws) {
-        this.set('ws', ws);
-    },
+    ws: computed.readOnly('session.data.authenticated.socket'),
 
     createConnection(toUid, username) {
         trace('new connection creating');

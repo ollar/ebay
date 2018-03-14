@@ -1,9 +1,16 @@
-Login
+<h1>
+    {{ t 'login.title'}}
+</h1>
 
 <form {{action "submit" on="submit"}}>
-    {{input name="username" value=username}}
+    <div class="input-group fluid">
+        <label for="username">{{t 'login.form.username.label'}}</label>
+        {{input name="username" value=username}}
+    </div>
 
-    <button type="submit">
-        Ok
-    </button>
+    <div class="button-group">
+        <button type="submit">
+            {{t 'buttons.submit'}}
+        </button>
+    </div>
 </form>

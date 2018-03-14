@@ -1,32 +1,27 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 import str from '../utils/str';
 
-import { hash } from 'rsvp';
-
-export default Route.extend(ApplicationRouteMixin, {
+export default Route.extend(AuthenticatedRouteMixin, {
     webrtc: service(),
     session: service(),
+
+    socket: computed.readOnly('session.data.authenticated.socket'),
 
     activate() {
         this._super(...arguments);
 
-        // const socket = this.get('websockets').socketFor('ws://0.0.0.0:8765/');
-        const socket = new WebSocket('ws://0.0.0.0:8765/');
+        const socket = this.get('socket');
 
-        // socket.on('open', this.handleOnOpen, this);
         socket.onopen = this.handleOnOpen.bind(this);
         socket.onmessage = this.handleOnMessage.bind(this);
-        // socket.onclose = this.handleOnClose.bind(this);
 
-        this.set('socket', socket);
-
-        this.get('webrtc')._setWS(socket);
-
-        console.log(this.get('session'))
+        this.set('authenticated', this.get('session.data.authenticated'));
 
         window.addEventListener('beforeunload', () => {
             this.handleOnClose();
@@ -37,8 +32,8 @@ export default Route.extend(ApplicationRouteMixin, {
     handleOnOpen() {
         this.get('socket').send(str({
             type: 'enterRoom',
-            uid: this.get('me.id'),
-            username: this.get('me.username'),
+            uid: this.get('authenticated.id'),
+            username: this.get('authenticated.username'),
         }));
     },
 
@@ -79,21 +74,6 @@ export default Route.extend(ApplicationRouteMixin, {
                 webrtc.dropConnection(data.uid);
                 break;
           }
-    },
-
-    model() {
-        return hash({
-            me: this.get('store').findAll('me').then(me => {
-                if (!me.get('length')) {
-                    this.transitionTo('login');
-                    return false;
-                }
-
-                this.set('me', me.get('firstObject'));
-
-                return me.get('firstObject');
-            })
-        });
     },
 
     deactivate() {
