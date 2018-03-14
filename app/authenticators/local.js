@@ -1,20 +1,21 @@
 import Base from 'ember-simple-auth/authenticators/base';
 
+import { inject as service } from '@ember/service';
+
 export default Base.extend({
-    connectSocket() {
-         return new WebSocket('ws://0.0.0.0:8765/');
-    },
+    websockets: service(),
     restore(data) {
-        const socket = this.connectSocket();
-        return Promise.resolve(Object.assign(data, { socket }));
+        this.get('websockets').connect();
+        return Promise.resolve(data);
     },
 
     authenticate(args) {
-        const socket = this.connectSocket();
-        return Promise.resolve(Object.assign(args, { socket }));
+        this.get('websockets').connect();
+        return Promise.resolve(args);
     },
 
     invalidate(data) {
+        this.get('websockets').disconnect();
         return Promise.resolve();
     }
 });

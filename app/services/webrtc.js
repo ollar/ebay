@@ -40,12 +40,13 @@ function _onSendChannelStateChange(channel) {
 export default Service.extend({
     store: service(),
     session: service(),
+    websockets: service(),
 
     me: computed.readOnly('session.data.authenticated'),
 
     UID: computed.readOnly('me.id'),
 
-    ws: computed.readOnly('session.data.authenticated.socket'),
+    ws: computed.readOnly('websockets.socket'),
 
     createConnection(toUid, username) {
         trace('new connection creating');
