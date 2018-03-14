@@ -2,7 +2,6 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 
-import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 import str from '../utils/str';
@@ -13,21 +12,21 @@ export default Route.extend(AuthenticatedRouteMixin, {
 
     socket: computed.readOnly('session.data.authenticated.socket'),
 
-    activate() {
-        this._super(...arguments);
+    // activate() {
+    //     this._super(...arguments);
 
-        const socket = this.get('socket');
+    //     const socket = this.get('socket');
 
-        socket.onopen = this.handleOnOpen.bind(this);
-        socket.onmessage = this.handleOnMessage.bind(this);
+    //     socket.onopen = this.handleOnOpen.bind(this);
+    //     socket.onmessage = this.handleOnMessage.bind(this);
 
-        this.set('authenticated', this.get('session.data.authenticated'));
+    //     this.set('authenticated', this.get('session.data.authenticated'));
 
-        window.addEventListener('beforeunload', () => {
-            this.handleOnClose();
-            return null;
-        });
-    },
+    //     window.addEventListener('beforeunload', () => {
+    //         this.handleOnClose();
+    //         return null;
+    //     });
+    // },
 
     handleOnOpen() {
         this.get('socket').send(str({

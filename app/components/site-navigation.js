@@ -6,4 +6,9 @@ export default Component.extend({
     id: 'main-navigation',
     session: service(),
 
+    actions: {
+        invalidateSession() {
+            this.get('session').invalidate();
+        },
+    }
 });
