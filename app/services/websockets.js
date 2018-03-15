@@ -25,13 +25,13 @@ export default Service.extend({
 
         socket.onopen = this.handleOnOpen.bind(this);
         socket.onmessage = this.handleOnMessage.bind(this);
+        socket.onclose = this.handleOnClose.bind(this);
 
         return socket;
     },
 
     disconnect() {
         const socket = this.get('socket');
-        this.handleOnClose();
         socket.close();
     },
 
@@ -44,6 +44,7 @@ export default Service.extend({
     },
 
     handleOnClose() {
+        this.get('webrtc').dropAllConnections();
         this.get('socket').send(str({
             type: 'channelClose',
             uid: this.get('me.id'),

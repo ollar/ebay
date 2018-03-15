@@ -24,19 +24,6 @@ let onSendChannelStateChangeHandler = () => {};
 
 // =============================================================================
 
-function bindChannelEvents(channel) {
-  channel.onopen = () => _onSendChannelStateChange(channel);
-  channel.onclose = () => _onSendChannelStateChange(channel);
-
-  channel.onmessage = bindChannelEventsOnMessage;
-}
-
-function _onSendChannelStateChange(channel) {
-  trace('channel state changed: ' + channel.readyState);
-
-  return onSendChannelStateChangeHandler(channel);
-}
-
 export default Service.extend({
     store: service(),
     session: service(),
@@ -63,11 +50,21 @@ export default Service.extend({
             return _this._onIceCandidate(e, toUid);
         };
 
-        this.get('store').createRecord('user', {
-            id: toUid,
-            username,
-            connection,
-        });
+        const user = this.get('store').peekRecord('user', toUid);
+
+        if (user) {
+            user.setProperties({
+                id: toUid,
+                username,
+                connection,
+            });
+        } else {
+            this.get('store').createRecord('user', {
+                id: toUid,
+                username,
+                connection,
+            });
+        }
 
       return connection;
     },
@@ -81,7 +78,7 @@ export default Service.extend({
         peer.set('channel', channel);
 
         // bind channel events
-        bindChannelEvents(channel);
+        this._bindChannelEvents(channel);
 
         return channel;
     },
@@ -154,13 +151,18 @@ export default Service.extend({
         // if (peers.length === 0) Sync.trigger('channelClose');
     },
 
+    dropAllConnections() {
+        const peers = this.get('store').peekAll('user');
+        peers.forEach(peer => this.dropConnection(peer.id));
+    },
+
     _receivedChannelCallback(e, toUid) {
         const channel = e.channel;
         const peer = this.get('store').peekRecord('user', toUid);
 
         peer.set('channel', channel);
 
-        bindChannelEvents(channel);
+        this._bindChannelEvents(channel);
     },
 
     _onIceCandidate(e, toUid) {
@@ -173,5 +175,18 @@ export default Service.extend({
             }));
         }
     },
+
+    _bindChannelEvents(channel) {
+        channel.onopen = () => this._onSendChannelStateChange(channel);
+        channel.onclose = () => this._onSendChannelStateChange(channel);
+
+        channel.onmessage = bindChannelEventsOnMessage;
+    },
+
+    _onSendChannelStateChange(channel) {
+        trace('channel state changed: ' + channel.readyState);
+
+        return onSendChannelStateChangeHandler(channel);
+    }
 
 });
