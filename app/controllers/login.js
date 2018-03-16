@@ -13,6 +13,8 @@ export default Controller.extend({
             this.get('session').authenticate('authenticator:local', {
                 username: this.get('username'),
                 id: uuid(),
+            }).then(() => {
+                this.transitionToRoute('index');
             });
 
             return;
