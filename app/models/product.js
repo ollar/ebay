@@ -4,5 +4,5 @@ export default DS.Model.extend({
     title: DS.attr('string'),
     description: DS.attr('string'),
     price: DS.attr('number'),
-    author: DS.belongsTo('user'),
+    author: DS.attr('string'),
 });
