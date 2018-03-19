@@ -17,7 +17,9 @@ export default DS.Model.extend({
         this.set('hash', this.calculateHash());
         const prev = this.get('store')
                          .peekAll('block')
-                         .filter((item) => item.id !== this.id).get('lastObject');
+                         .filter((item) => item.id !== this.id)
+                         .sortBy('timestamp')
+                         .get('lastObject');
 
         if (prev) {
             this.set('index', prev.get('index') + 1);
