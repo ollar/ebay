@@ -1,25 +1,39 @@
 import DS from 'ember-data';
 import CryptoJS from 'cryptojs';
 
+import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
+
 export default DS.Model.extend({
+    webrtc: service(),
     index: DS.attr('number'),
     timestamp: DS.attr('number'),
     entry: DS.attr(),
+    entity: DS.attr('string'),
     hash: DS.attr('string'),
     previousHash: DS.attr('string'),
 
+    latestBlock: computed(function() {
+        return this.get('store')
+            .peekAll('block')
+            .filter(item => item.id !== this.id)
+            .sortBy('timestamp')
+            .get('lastObject');
+    }),
+
     calculateHash() {
-        return CryptoJS.SHA256(this.get('index') + this.get('previousHash') + this.get('timestamp') + this.get('entry')).toString();
+        return CryptoJS.SHA256(
+            this.get('index') +
+                this.get('previousHash') +
+                this.get('timestamp') +
+                this.get('entry')
+        ).toString();
     },
 
     save(options) {
         this.set('timestamp', new Date().valueOf());
         this.set('hash', this.calculateHash());
-        const prev = this.get('store')
-                         .peekAll('block')
-                         .filter((item) => item.id !== this.id)
-                         .sortBy('timestamp')
-                         .get('lastObject');
+        const prev = this.get('latestBlock');
 
         if (prev) {
             this.set('index', prev.get('index') + 1);
@@ -29,6 +43,16 @@ export default DS.Model.extend({
             this.set('previousHash', this.get('hash'));
         }
 
+        this.get('webrtc').broadcast(this.toJSON(), 'block::create');
         return this._super(options);
-    }
+    },
+
+    saveApply() {
+        const entity = this.get('store').createRecord(
+            this.get('entity'),
+            this.get('entry')
+        );
+        entity.save({ norelations: true });
+        DS.Model.prototype.save.apply(this, arguments);
+    },
 });

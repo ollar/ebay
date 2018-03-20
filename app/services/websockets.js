@@ -36,19 +36,23 @@ export default Service.extend({
     },
 
     handleOnOpen() {
-        this.get('socket').send(str({
-            type: 'enterRoom',
-            uid: this.get('authenticated.id'),
-            username: this.get('authenticated.username'),
-        }));
+        this.get('socket').send(
+            str({
+                type: 'enterRoom',
+                uid: this.get('authenticated.id'),
+                username: this.get('authenticated.username'),
+            })
+        );
     },
 
     handleOnClose() {
         this.get('webrtc').dropAllConnections();
-        this.get('socket').send(str({
-            type: 'channelClose',
-            uid: this.get('me.id'),
-        }));
+        this.get('socket').send(
+            str({
+                type: 'channelClose',
+                uid: this.get('me.id'),
+            })
+        );
     },
 
     handleOnMessage(e) {
@@ -80,7 +84,6 @@ export default Service.extend({
             case 'channelClose':
                 webrtc.dropConnection(data.uid);
                 break;
-          }
+        }
     },
-
 });

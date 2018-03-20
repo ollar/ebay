@@ -6,21 +6,74 @@ import trace from '../utils/trace';
 import str from '../utils/str';
 
 const pcConfig = {
-  iceServers: [
-    {urls:'stun:stun3.l.google.com:19302'},
-    {
-      urls: 'turn:192.158.29.39:3478?transport=udp',
-      credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-      username: '28224511:1379330808'
-    },
-  ]
+    iceServers: [
+        { urls: 'stun:stun3.l.google.com:19302' },
+        {
+            urls: 'turn:192.158.29.39:3478?transport=udp',
+            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+            username: '28224511:1379330808',
+        },
+    ],
 };
 
 const pcConstraints = null;
 const dataConstraint = null;
 
-let bindChannelEventsOnMessage = () => {};
-let onSendChannelStateChangeHandler = () => {};
+function bindChannelEventsOnMessage(event) {
+    const message = JSON.parse(event.data);
+
+    switch (message.eventName) {
+        case 'block::create':
+            this.get('store')
+                .createRecord('block', message.data)
+                .saveApply();
+            break;
+
+        case 'block::index_check':
+            var lastBlockIndex = this.get('store')
+                .peekAll('block')
+                .filter(item => item.id !== this.id)
+                .sortBy('timestamp')
+                .get('lastObject.index');
+
+            if (!message.data.index || lastBlockIndex > message.data.index) {
+                this.send(
+                    event.currentTarget.label,
+                    this.get('store')
+                        .peekAll('block')
+                        .slice(message.data.index),
+                    'block::update_indexes'
+                );
+            }
+            break;
+
+        case 'block::update_indexes':
+            message.data.forEach(block =>
+                this.get('store')
+                    .createRecord('block', block)
+                    .saveApply()
+            );
+
+            break;
+
+        default:
+            trace(message);
+    }
+}
+function onSendChannelStateChangeHandler(channel) {
+    if (channel.readyState === 'open') {
+        this.broadcast(
+            {
+                index: this.get('store')
+                    .peekAll('block')
+                    .filter(item => item.id !== this.id)
+                    .sortBy('timestamp')
+                    .get('lastObject.index'),
+            },
+            'block::index_check'
+        );
+    }
+}
 
 // =============================================================================
 
@@ -40,12 +93,12 @@ export default Service.extend({
         const connection = new RTCPeerConnection(pcConfig, pcConstraints);
         const _this = this;
 
-        connection.ondatachannel = (e) => {
+        connection.ondatachannel = e => {
             trace('receive datachannel event');
             return _this._receivedChannelCallback(e, toUid);
         };
 
-        connection.onicecandidate = (e) => {
+        connection.onicecandidate = e => {
             trace('received icecandidate');
             return _this._onIceCandidate(e, toUid);
         };
@@ -66,12 +119,14 @@ export default Service.extend({
             });
         }
 
-      return connection;
+        return connection;
     },
 
     createChannel({ uid: toUid }) {
         const peer = this.get('store').peekRecord('user', toUid);
-        const channel = peer.get('connection').createDataChannel(toUid, dataConstraint);
+        const channel = peer
+            .get('connection')
+            .createDataChannel(toUid, dataConstraint);
 
         trace('create channel: ' + toUid);
 
@@ -87,16 +142,21 @@ export default Service.extend({
         const peer = this.get('store').peekRecord('user', toUid);
         const connection = peer.get('connection');
 
-        connection.createOffer().then((offer) => {
-            connection.setLocalDescription(offer);
-            this.get('ws').send(str({
-                type: 'offer',
-                fromUid: this.get('UID'),
-                username: this.get('me.username'),
-                toUid: toUid,
-                offer: str(offer),
-            }));
-        }).catch(e => trace(e));
+        connection
+            .createOffer()
+            .then(offer => {
+                connection.setLocalDescription(offer);
+                this.get('ws').send(
+                    str({
+                        type: 'offer',
+                        fromUid: this.get('UID'),
+                        username: this.get('me.username'),
+                        toUid: toUid,
+                        offer: str(offer),
+                    })
+                );
+            })
+            .catch(e => trace(e));
     },
 
     handleOffer(data) {
@@ -107,15 +167,20 @@ export default Service.extend({
 
         connection.setRemoteDescription(offer);
 
-        connection.createAnswer().then(answer => {
-            connection.setLocalDescription(answer);
-            this.get('ws').send(str({
-                type: 'answer',
-                fromUid: this.get('UID'),
-                toUid: data.fromUid,
-                answer: str(answer),
-            }));
-        }).catch(e => trace(e));
+        connection
+            .createAnswer()
+            .then(answer => {
+                connection.setLocalDescription(answer);
+                this.get('ws').send(
+                    str({
+                        type: 'answer',
+                        fromUid: this.get('UID'),
+                        toUid: data.fromUid,
+                        answer: str(answer),
+                    })
+                );
+            })
+            .catch(e => trace(e));
     },
 
     handleAnswer(data) {
@@ -133,7 +198,9 @@ export default Service.extend({
         const peer = this.get('store').peekRecord('user', data.fromUid);
 
         const connection = peer.get('connection');
-        connection.addIceCandidate(new RTCIceCandidate(JSON.parse(data.iceCandidate)));
+        connection.addIceCandidate(
+            new RTCIceCandidate(JSON.parse(data.iceCandidate))
+        );
     },
 
     dropConnection(toUid) {
@@ -167,12 +234,14 @@ export default Service.extend({
 
     _onIceCandidate(e, toUid) {
         if (e.candidate) {
-            this.get('ws').send(str({
-              type: 'iceCandidate',
-              fromUid: this.get('UID'),
-              toUid: toUid,
-              iceCandidate: str(e.candidate.toJSON()),
-            }));
+            this.get('ws').send(
+                str({
+                    type: 'iceCandidate',
+                    fromUid: this.get('UID'),
+                    toUid: toUid,
+                    iceCandidate: str(e.candidate.toJSON()),
+                })
+            );
         }
     },
 
@@ -180,13 +249,35 @@ export default Service.extend({
         channel.onopen = () => this._onSendChannelStateChange(channel);
         channel.onclose = () => this._onSendChannelStateChange(channel);
 
-        channel.onmessage = bindChannelEventsOnMessage;
+        channel.onmessage = bindChannelEventsOnMessage.bind(this);
     },
 
     _onSendChannelStateChange(channel) {
         trace('channel state changed: ' + channel.readyState);
 
-        return onSendChannelStateChangeHandler(channel);
-    }
+        return onSendChannelStateChangeHandler.call(this, channel);
+    },
 
+    send(uid, data, eventName) {
+        const peer = this.get('store').peekRecord('user', uid);
+
+        if (peer.get('id') === this.get('UID')) return;
+
+        const channel = peer.get('channel');
+
+        if (channel.readyState === 'open') {
+            channel.send(
+                str({
+                    type: 'message',
+                    data,
+                    eventName,
+                })
+            );
+        }
+    },
+
+    broadcast(data, eventName) {
+        const peers = this.get('store').peekAll('user');
+        return peers.map(item => this.send(item.id, data, eventName));
+    },
 });
