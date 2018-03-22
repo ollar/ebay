@@ -7,19 +7,18 @@ export default DS.Model.extend({
     author: DS.attr('string'),
     sold: DS.attr('boolean', { defaultValue: false }),
 
-    // bids: DS.hasMany('bid'),
-    bids: DS.attr({ defaultValue: () => [] }),
+    bids: DS.hasMany('bid'),
+    // bids: DS.attr({ defaultValue: () => [] }),
 
     save(options = {}) {
+        this._super(options);
         if (!options.norelations) {
             const block = this.get('store').createRecord('block', {
                 entry: this.toJSON(),
-                entity: 'product',
+                entity: 'product'
             });
 
             block.save();
         }
-
-        return this._super(options);
-    },
+    }
 });

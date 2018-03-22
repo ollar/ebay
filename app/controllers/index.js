@@ -7,11 +7,11 @@ export default Controller.extend({
         makeBid(product) {
             const bid = this.get('store').createRecord('bid', {
                 author: this.get('session.data.authenticated.id'),
-                product: product.id,
+                product: product,
                 price: product.get('price') + 2,
             });
 
-            product.get('bids').addObject(bid.id);
+            product.get('bids').addObject(bid);
 
             bid.save();
             product.save();
