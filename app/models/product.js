@@ -7,6 +7,9 @@ export default DS.Model.extend({
     author: DS.attr('string'),
     sold: DS.attr('boolean', { defaultValue: false }),
 
+    // bids: DS.hasMany('bid'),
+    bids: DS.attr({ defaultValue: () => [] }),
+
     save(options = {}) {
         if (!options.norelations) {
             const block = this.get('store').createRecord('block', {

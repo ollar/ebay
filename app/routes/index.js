@@ -7,6 +7,7 @@ export default Route.extend({
         return hash({
             products: this.get('store').findAll('product'),
             blocks: this.get('store').findAll('block'),
+            bids: this.get('store').findAll('bid'),
         });
     },
 });
