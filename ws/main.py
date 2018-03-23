@@ -95,7 +95,6 @@ class WS_Handler:
         })
 
     async def _on_channel_close(self, data, path):
-        print('11')
         for key in self.connections[path].keys():
             await self.sendData(key, path, {
                 'type': 'channelClose',
