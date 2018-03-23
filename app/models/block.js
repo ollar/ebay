@@ -59,8 +59,8 @@ export default DS.Model.extend({
                 this.get('entity'),
                 this.get('entry')
             );
-            entity.save({ norelations: true });
-            DS.Model.prototype.save.apply(this, arguments);
         }
+        entity.save({ norelations: true });
+        DS.Model.prototype.save.apply(this, arguments);
     },
 });

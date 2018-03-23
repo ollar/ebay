@@ -38,7 +38,7 @@ function bindChannelEventsOnMessage(event) {
 
             if (!message.data.index || lastBlockIndex > message.data.index) {
                 this.send(
-                    event.currentTarget.label,
+                    event.currentTarget.toUid,
                     this.get('store')
                         .peekAll('block')
                         .slice(message.data.index),
@@ -62,7 +62,8 @@ function bindChannelEventsOnMessage(event) {
 }
 function onSendChannelStateChangeHandler(channel) {
     if (channel.readyState === 'open') {
-        this.broadcast(
+        this.send(
+            channel.toUid,
             {
                 index: this.get('store')
                     .peekAll('block')
@@ -130,7 +131,9 @@ export default Service.extend({
 
         trace('create channel: ' + toUid);
 
+        channel.toUid = toUid;
         peer.set('channel', channel);
+        peer.save();
 
         // bind channel events
         this._bindChannelEvents(channel);
@@ -226,6 +229,7 @@ export default Service.extend({
     _receivedChannelCallback(e, toUid) {
         const channel = e.channel;
         const peer = this.get('store').peekRecord('user', toUid);
+        channel.toUid = toUid;
 
         peer.set('channel', channel);
 
