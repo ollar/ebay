@@ -1,1 +1,15 @@
+<h1 class="title">
+    {{model.title}}
+</h1>
+
+<div class="description">
+    {{model.description}}
+</div>
+
+<div class="buttons-wrapper">
+    <button class="bid" {{action 'bid' model}}>
+        {{t 'product-details.buttons.bid'}}
+    </button>
+</div>
+
 {{outlet}}

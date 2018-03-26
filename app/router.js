@@ -11,7 +11,9 @@ Router.map(function() {
     this.route('create-product');
 
     this.route('index', { path: '/' }, function() {
-        this.route('product-details', { path: '/product/:product_id' });
+        this.route('product-details', { path: '/product/:product_id' }, function() {
+          this.route('bid');
+        });
     });
 });
 
