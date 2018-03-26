@@ -26,6 +26,7 @@ export default DS.Model.extend({
             this.get('index') +
                 this.get('previousHash') +
                 this.get('timestamp') +
+                this.get('entity') +
                 this.get('entry')
         ).toString();
     },
