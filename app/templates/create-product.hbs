@@ -18,6 +18,16 @@
         {{input id="price" type="number" step=".01" value=model.price}}
     </div>
 
+    <div class="input-group fluid">
+        <label for="preferablePrice">{{t 'create-product.form.preferablePrice.label'}}</label>
+        {{input id="preferablePrice" type="number" step=".01" value=model.preferablePrice}}
+    </div>
+
+    <div class="input-group fluid">
+        <label for="bidStep">{{t 'create-product.form.bidStep.label'}}</label>
+        {{input id="bidStep" type="number" step="1" value=model.bidStep}}
+    </div>
+
     <div class="button-group">
         <button type="submit">
             {{t 'buttons.submit'}}

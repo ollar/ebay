@@ -6,10 +6,13 @@
     {{model.description}}
 </div>
 
+<div class="price">
+    {{model.price}}
+</div>
+
 <div class="buttons-wrapper">
-    <button class="bid" {{action 'bid' model}}>
-        {{t 'product-details.buttons.bid'}}
-    </button>
+    {{link-to (t 'product-details.buttons.bid') 'index.product-details.bid' model
+        class="bid button" }}
 </div>
 
 {{outlet}}

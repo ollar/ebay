@@ -1,1 +1,17 @@
+<div class="modal">
+  <div class="card">
+    <label for="modal-toggle" class="close"></label>
+    <h3 class="section">{{t 'bid.title' model.title}}</h3>
+    <p class="section">{{t 'bid.notice'}}</p>
+
+    <form {{action 'makeBid' on='submit'}}>
+        {{input type="text" value=bidPrice}}
+
+        <button>
+            {{t 'bid.buttons.submit'}}
+        </button>
+    </form>
+  </div>
+</div>
+
 {{outlet}}

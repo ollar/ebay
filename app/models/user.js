@@ -4,4 +4,6 @@ export default DS.Model.extend({
     username: DS.attr('string'),
     connection: DS.attr(),
     channel: DS.attr(),
+
+    images: DS.attr({ defaultValue: () => [] }),
 });
