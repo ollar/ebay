@@ -10,6 +10,11 @@ export default Controller.extend({
         );
     }),
     actions: {
+        goBack() {
+            this.get('model.bid').unloadRecord();
+            this.get('model.product').rollbackAttributes();
+            window.history.back();
+        },
         makeBid() {
             const bid = this.get('model.bid');
             const product = this.get('model.product');

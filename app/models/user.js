@@ -5,5 +5,5 @@ export default DS.Model.extend({
     connection: DS.attr(),
     channel: DS.attr(),
 
-    images: DS.attr({ defaultValue: () => [] }),
+    image: DS.attr('string'),
 });

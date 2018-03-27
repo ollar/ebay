@@ -33,13 +33,13 @@ export default Component.extend({
             e.preventDefault();
             this.set('dragover', false);
             const files = Array.prototype.slice.call(e.dataTransfer.files);
-            this.uploadImage(files[0]);
+            this.uploadImage(files);
         },
 
         inputChange(e) {
             e.preventDefault();
             const files = Array.prototype.slice.call(e.target.files);
-            this.uploadImage(files[0]);
+            this.uploadImage(files);
         },
 
         removeImage(imageModel) {

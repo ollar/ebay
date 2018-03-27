@@ -41,6 +41,7 @@ export default Service.extend({
                 type: 'enterRoom',
                 uid: this.get('authenticated.id'),
                 username: this.get('authenticated.username'),
+                image: this.get('authenticated.image'),
             })
         );
     },
@@ -62,7 +63,7 @@ export default Service.extend({
         switch (data.type) {
             case 'newUser':
                 // create new webrtc connection
-                webrtc.createConnection(data.uid, data.username);
+                webrtc.createConnection(data.uid, data.username, data.image);
                 // create channel
                 webrtc.createChannel(data);
                 // create offer ->

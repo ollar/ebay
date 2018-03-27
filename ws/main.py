@@ -70,6 +70,7 @@ class WS_Handler:
                     'type': 'newUser',
                     'uid': myuid,
                     'username': data.get('username'),
+                    'image': data.get('image'),
                 })
 
     async def _on_offer(self, data, path):
@@ -78,6 +79,7 @@ class WS_Handler:
             'fromUid': data.get('fromUid'),
             'username': data.get('username'),
             'offer': data.get('offer'),
+            'image': data.get('image'),
         })
 
     async def _on_answer(self, data, path):

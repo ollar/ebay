@@ -6,6 +6,7 @@
     ondragleave={{action 'dragLeave'}}
     ondrop={{action 'drop'}}
 >
-    <input type="file" accept="image/*" onchange={{action 'inputChange'}} />
+    <input type="file" id="file-input" accept="image/*" onchange={{action 'inputChange'}} />
+    <label for="file-input" class="button">Upload file...</label>
     {{yield}}
 </div>

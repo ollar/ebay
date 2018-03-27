@@ -10,6 +10,10 @@
 
     {{images-drop-area uploadImage=(action 'uploadImage')}}
 
+    {{#if image}}
+        <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+    {{/if}}
+
     <div class="button-group">
         <button type="submit">
             {{t 'buttons.submit'}}

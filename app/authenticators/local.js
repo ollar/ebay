@@ -4,7 +4,6 @@ import { inject as service } from '@ember/service';
 
 export default Base.extend({
     websockets: service(),
-    // webrtc: service(),
 
     restore(data) {
         this.get('websockets').connect();
@@ -16,8 +15,8 @@ export default Base.extend({
         return Promise.resolve(args);
     },
 
-    invalidate(data) {
+    invalidate() {
         this.get('websockets').disconnect();
         return Promise.resolve();
-    }
+    },
 });

@@ -3,6 +3,14 @@
 </h1>
 
 <form {{action 'submit' on="submit"}}>
+    {{images-drop-area uploadImage=(action 'uploadImage')}}
+
+    {{#each images as |image|}}
+        <div class="image-wrapper">
+            <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+        </div>
+    {{/each}}
+
     <div class="input-group fluid">
         <label for="title">{{t 'create-product.form.title.label'}}</label>
         {{input id="title" value=model.title}}

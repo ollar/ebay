@@ -89,7 +89,7 @@ export default Service.extend({
 
     ws: computed.readOnly('websockets.socket'),
 
-    createConnection(toUid, username) {
+    createConnection(toUid, username, image) {
         trace('new connection creating');
         const connection = new RTCPeerConnection(pcConfig, pcConstraints);
         const _this = this;
@@ -110,12 +110,14 @@ export default Service.extend({
             user.setProperties({
                 id: toUid,
                 username,
+                image,
                 connection,
             });
         } else {
             this.get('store').createRecord('user', {
                 id: toUid,
                 username,
+                image,
                 connection,
             });
         }
@@ -155,6 +157,7 @@ export default Service.extend({
                         fromUid: this.get('UID'),
                         username: this.get('me.username'),
                         toUid: toUid,
+                        image: this.get('me.image'),
                         offer: str(offer),
                     })
                 );
@@ -166,7 +169,11 @@ export default Service.extend({
         trace('handle offer from ' + data.fromUid);
 
         const offer = new RTCSessionDescription(JSON.parse(data.offer));
-        const connection = this.createConnection(data.fromUid, data.username);
+        const connection = this.createConnection(
+            data.fromUid,
+            data.username,
+            data.image
+        );
 
         connection.setRemoteDescription(offer);
 
