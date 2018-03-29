@@ -37,13 +37,17 @@ function bindChannelEventsOnMessage(event) {
                 .get('lastObject.index');
 
             if (!message.data.index || lastBlockIndex > message.data.index) {
-                this.send(
-                    event.currentTarget.toUid,
-                    this.get('store')
-                        .peekAll('block')
-                        .slice(message.data.index),
-                    'block::update_indexes'
-                );
+                var blocks = this.get('store')
+                    .peekAll('block')
+                    .slice(message.data.index);
+
+                for (let i = 0; i < blocks.length; i += 10) {
+                    this.send(
+                        event.currentTarget.toUid,
+                        blocks.slice(i, i + 10),
+                        'block::update_indexes'
+                    );
+                }
             }
             break;
 
@@ -54,6 +58,10 @@ function bindChannelEventsOnMessage(event) {
                     .saveApply()
             );
 
+            break;
+
+        case 'entity::request_image':
+            console.log(message);
             break;
 
         default:
