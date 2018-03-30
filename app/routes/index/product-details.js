@@ -16,13 +16,11 @@ export default Route.extend({
                     this.get('store')
                         .findRecord('image', imageId)
                         .catch(() => {
-                            console.log('asdaa');
                             this.get('webrtc').send(
                                 product.get('author'),
-                                { imageId },
-                                'entity::request_image'
+                                { entity: 'image', id: imageId },
+                                'entity::request_data'
                             );
-                            console.log(product.get('data'));
                         })
                 );
             }

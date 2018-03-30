@@ -29,6 +29,13 @@ function bindChannelEventsOnMessage(event) {
                 .saveApply();
             break;
 
+        case 'entity::create':
+            this.get('store')
+                .createRecord(message.data.entity, message.data.data)
+                .save();
+            console.log(message);
+            break;
+
         case 'block::index_check':
             var lastBlockIndex = this.get('store')
                 .peekAll('block')
@@ -60,8 +67,21 @@ function bindChannelEventsOnMessage(event) {
 
             break;
 
-        case 'entity::request_image':
-            console.log(message);
+        case 'entity::request_data':
+            this.get('store')
+                .findRecord(message.data.entity, message.data.id)
+                .then(entity => {
+                    if (entity)
+                        this.send(
+                            event.currentTarget.toUid,
+                            {
+                                entity: message.data.entity,
+                                data: entity.toJSON(),
+                            },
+                            'entity::create'
+                        );
+                });
+
             break;
 
         default:
@@ -70,6 +90,7 @@ function bindChannelEventsOnMessage(event) {
 }
 function onSendChannelStateChangeHandler(channel) {
     if (channel.readyState === 'open') {
+        this.set(`opened.${channel.toUid}`, true);
         this.send(
             channel.toUid,
             {
@@ -81,6 +102,15 @@ function onSendChannelStateChangeHandler(channel) {
             },
             'block::index_check'
         );
+
+        this.getWithDefault(`messageQueue.${channel.toUid}`, []).forEach(
+            message => {
+                this.send(channel.toUid, message.data, message.eventName);
+            }
+        );
+        this.set(`messageQueue.${channel.toUid}`, []);
+    } else {
+        this.set(`opened.${channel.toUid}`, false);
     }
 }
 
@@ -90,6 +120,9 @@ export default Service.extend({
     store: service(),
     session: service(),
     websockets: service(),
+
+    opened: computed(() => ({})),
+    messageQueue: computed(() => ({})),
 
     me: computed.readOnly('session.data.authenticated'),
 
@@ -279,6 +312,14 @@ export default Service.extend({
 
     send(uid, data, eventName) {
         const peer = this.get('store').peekRecord('user', uid);
+
+        if (!this.get(`opened.${uid}`)) {
+            this.set(`messageQueue.${uid}`, [
+                ...this.getWithDefault(`messageQueue.${uid}`, []),
+                { eventName, data },
+            ]);
+            return;
+        }
 
         if (peer.get('id') === this.get('UID')) return;
 
