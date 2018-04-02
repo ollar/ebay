@@ -5,7 +5,7 @@
 <form {{action 'submit' on="submit"}}>
     {{images-drop-area uploadImage=(action 'uploadImage')}}
 
-    {{#each images as |image|}}
+    {{#each model.images as |image|}}
         <div class="image-wrapper">
             <img src={{image.base64}} width={{image.width}} height={{image.height}}>
         </div>

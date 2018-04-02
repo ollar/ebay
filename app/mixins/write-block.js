@@ -5,7 +5,7 @@ export default Mixin.create({
         this._super(options);
         if (!options.norelations) {
             const block = this.get('store').createRecord('block', {
-                entry: this.toJSON({ includeId: true }),
+                entry: this.serialize({ includeId: true }),
                 entity: this.get('_internalModel.modelName'),
             });
 

@@ -1,22 +1,21 @@
 <h1 class="title">
-    {{model.product.title}}
+    {{model.title}}
 </h1>
 
 {{#each model.images as |image|}}
-    {{log image}}
     <img src={{image.base64}} width={{image.width}} height={{image.height}}>
 {{/each}}
 
 <div class="description">
-    {{model.product.description}}
+    {{model.description}}
 </div>
 
 <div class="price">
-    {{model.product.price}}
+    {{model.price}}
 </div>
 
 <div class="buttons-wrapper">
-    {{link-to (t 'product-details.buttons.bid') 'index.product-details.bid' model.product.id
+    {{link-to (t 'product-details.buttons.bid') 'index.product-details.bid'
         class="bid button" }}
 </div>
 

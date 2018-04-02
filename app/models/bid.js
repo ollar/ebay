@@ -4,8 +4,8 @@ import { inject as service } from '@ember/service';
 
 export default DS.Model.extend(WriteBlockMixin, {
     session: service(),
-    product: DS.attr('string'),
-    // product: DS.belongsTo('product'),
+    // product: DS.attr('string'),
+    product: DS.belongsTo('product'),
     author: DS.attr('string'),
     price: DS.attr(),
 

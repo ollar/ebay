@@ -22,7 +22,7 @@ export default Controller.extend({
             bid.set('product', product.id);
             bid.set('price', this.get('bidPrice'));
             product.set('price', bid.get('price'));
-            product.get('bids').addObject(bid.id);
+            product.get('bids').addObject(bid);
 
             bid.save();
             product.save();

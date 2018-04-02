@@ -27,7 +27,7 @@ export default DS.Model.extend({
                 this.get('previousHash') +
                 this.get('timestamp') +
                 this.get('entity') +
-                this.get('entry')
+                JSON.stringify(this.get('entry'))
         ).toString();
     },
 
@@ -44,7 +44,7 @@ export default DS.Model.extend({
             this.set('previousHash', this.get('hash'));
         }
 
-        this.get('webrtc').broadcast(this.toJSON(), 'block::create');
+        this.get('webrtc').broadcast(this.serialize(), 'block::create');
         return this._super(options);
     },
 

@@ -9,10 +9,11 @@ export default DS.Model.extend(WriteBlockMixin, {
     preferablePrice: DS.attr('number'),
     author: DS.attr('string'),
 
-    images: DS.attr({ defaultValue: () => [] }),
+    images: DS.hasMany('image'),
+    // images: DS.attr({ defaultValue: () => [] }),
     sold: DS.attr('boolean', { defaultValue: false }),
 
-    // bids: DS.hasMany('bid'),
-    bids: DS.attr({ defaultValue: () => [] }),
+    bids: DS.hasMany('bid'),
+    // bids: DS.attr({ defaultValue: () => [] }),
     bidStep: DS.attr('number'),
 });
