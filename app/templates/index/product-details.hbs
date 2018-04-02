@@ -3,6 +3,7 @@
 </h1>
 
 {{#each model.images as |image|}}
+    {{log image}}
     <img src={{image.base64}} width={{image.width}} height={{image.height}}>
 {{/each}}
 

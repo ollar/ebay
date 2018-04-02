@@ -12,18 +12,22 @@ export default Route.extend({
             );
 
             if (product.get('images.length')) {
-                images = product.get('images').map(imageId =>
-                    this.get('store')
-                        .findRecord('image', imageId)
-                        .catch(() => {
-                            this.get('webrtc').send(
-                                product.get('author'),
-                                { entity: 'image', id: imageId },
-                                'entity::request_data'
-                            );
-                        })
-                );
+                images = product.get('images').map(imageId => {
+                    console.log(imageId);
+                    let image = this.get('store').peekRecord('image', imageId);
+                    if (!image) {
+                        this.get('webrtc').send(
+                            product.get('author'),
+                            { entity: 'image', id: imageId },
+                            'entity::request_data'
+                        );
+                    }
+                    console.log(image);
+                    return image;
+                });
             }
+
+            console.log(images);
 
             res({ product, images });
         });

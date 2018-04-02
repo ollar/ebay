@@ -20,7 +20,20 @@ const pcConstraints = null;
 const dataConstraint = null;
 
 function bindChannelEventsOnMessage(event) {
-    const message = JSON.parse(event.data);
+    let message;
+    try {
+        message = JSON.parse(event.data);
+    } catch (e) {
+        const messageChunks = this.get('messageChunks');
+        messageChunks.pushObject(event.data);
+        if (messageChunks.join('').length === this.get('long_message_length')) {
+            message = JSON.parse(messageChunks.join(''));
+            this.set('messageChunks', []);
+            this.set('long_message_length', '');
+        } else {
+            return;
+        }
+    }
 
     switch (message.eventName) {
         case 'block::create':
@@ -30,10 +43,29 @@ function bindChannelEventsOnMessage(event) {
             break;
 
         case 'entity::create':
-            this.get('store')
-                .createRecord(message.data.entity, message.data.data)
-                .save();
-            console.log(message);
+            try {
+                var entity = this.get('store').peekRecord(
+                    message.data.entity,
+                    message.data.data.id
+                );
+                entity.setProperties(message.data.data);
+                entity.save();
+            } catch (e) {
+                this.get('store')
+                    .createRecord(message.data.entity, message.data.data)
+                    .save();
+            }
+            // this.get('store')
+            //     .peekRecord(message.data.entity, message.data.data.id)
+            //     .then(entity => {
+            //         entity.setProperties(message.data.data);
+            //         entity.save();
+            //     })
+            //     .catch(() => {
+            //         this.get('store')
+            //             .createRecord(message.data.entity, message.data.data)
+            //             .save();
+            //     });
             break;
 
         case 'block::index_check':
@@ -76,12 +108,16 @@ function bindChannelEventsOnMessage(event) {
                             event.currentTarget.toUid,
                             {
                                 entity: message.data.entity,
-                                data: entity.toJSON(),
+                                data: entity.serialize({ includeId: true }),
                             },
                             'entity::create'
                         );
                 });
 
+            break;
+
+        case 'message::long_message::length':
+            this.set('long_message_length', message.data.length);
             break;
 
         default:
@@ -123,6 +159,7 @@ export default Service.extend({
 
     opened: computed(() => ({})),
     messageQueue: computed(() => ({})),
+    messageChunks: computed(() => []),
 
     me: computed.readOnly('session.data.authenticated'),
 
@@ -312,6 +349,11 @@ export default Service.extend({
 
     send(uid, data, eventName) {
         const peer = this.get('store').peekRecord('user', uid);
+        const message = str({
+            type: 'message',
+            data,
+            eventName,
+        });
 
         if (!this.get(`opened.${uid}`)) {
             this.set(`messageQueue.${uid}`, [
@@ -325,15 +367,52 @@ export default Service.extend({
 
         const channel = peer.get('channel');
 
-        if (channel.readyState === 'open') {
+        if (message.length > 16384) {
+            console.log('11111');
+            // return this.sendMessageChunked(uid, data, eventName);
             channel.send(
                 str({
-                    type: 'message',
-                    data,
-                    eventName,
+                    type: 'notification',
+                    eventName: 'message::long_message::length',
+                    data: { id: data.data.id, length: message.length },
                 })
             );
         }
+
+        if (channel.readyState === 'open') {
+            channel.send(message);
+        }
+    },
+
+    sendMessageChunked(uid, data, eventName) {
+        const peer = this.get('store').peekRecord('user', uid);
+        const channel = peer.get('channel');
+
+        let message = str({
+            type: 'message',
+            data,
+            eventName,
+        });
+
+        if (channel.readyState !== 'open') return;
+
+        let chunk;
+
+        while (message.length > 16384) {
+            chunk = message.slice(0, 16384);
+            message = message.slice(16384);
+
+            console.log(chunk);
+        }
+
+        // if (message.length > 16384) {
+        //     channel.send(
+        //         str({
+        //             type: 'chunk',
+        //             message,
+        //         })
+        //     );
+        // }
     },
 
     broadcast(data, eventName) {
