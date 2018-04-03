@@ -9,7 +9,66 @@ export default {
   //
   // "key.with.interpolation": "Text with {{anInterpolation}}"
 
+  links: {
+    home: 'Home',
+  },
+
+  buttons: {
+    submit: 'Submit',
+  },
+
   navigation: {
-    create_product: "Create Product",
-  }
+    create_product: 'Create Product',
+    logout: 'Log out',
+  },
+
+  footer: {
+    footer_text: 'Made with \u2764 SPB 2018',
+  },
+
+  login: {
+    title: 'Login',
+    form: {
+      username: {
+        label: 'Username',
+      },
+    },
+  },
+
+  product_details: {
+    buttons: {
+      bid: 'Bid',
+    },
+  },
+
+  bid: {
+    title: 'Bid',
+    notice: 'Please be responsible and avoid bidding until you are sure',
+    form: {
+      bidPrice: {
+        label: 'Bid Price',
+      },
+    },
+  },
+
+  create_product: {
+    title: 'Create Product',
+    form: {
+      title: {
+        label: 'Title',
+      },
+      description: {
+        label: 'Description',
+      },
+      price: {
+        label: 'Price',
+      },
+      preferablePrice: {
+        label: 'Preferable Price',
+      },
+      bidStep: {
+        label: 'Bid Step',
+      },
+    },
+  },
 };

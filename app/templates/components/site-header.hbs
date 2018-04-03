@@ -1,1 +1,7 @@
+{{link-to (t 'links.home') 'index' class="button"}}
+
+{{#if session.isAuthenticated}}
+    <button {{action 'invalidateSession'}}>{{t 'navigation.logout'}}</button>
+{{/if}}
+
 {{yield}}

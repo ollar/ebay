@@ -5,10 +5,13 @@
     <p class="section">{{t 'bid.notice'}}</p>
 
     <form {{action 'makeBid' on='submit'}}>
-        {{input type="text" value=bidPrice}}
+        <div class="input-group fluid">
+            <label for="bidPrice">{{t 'bid.form.bidPrice.label'}}</label>
+            {{input id="bidPrice" type="text" value=bidPrice}}
+        </div>
 
         <button>
-            {{t 'bid.buttons.submit'}}
+            {{t 'buttons.submit'}}
         </button>
     </form>
   </div>

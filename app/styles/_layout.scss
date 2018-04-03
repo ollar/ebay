@@ -1,0 +1,14 @@
+html,
+body {
+    min-height: 100vh;
+}
+
+body > .ember-view {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex-grow: 2;
+}

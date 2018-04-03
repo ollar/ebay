@@ -1,5 +1,5 @@
 <h1>
-    {{t 'create-product.title'}}
+    {{t 'create_product.title'}}
 </h1>
 
 <form {{action 'submit' on="submit"}}>
@@ -12,27 +12,27 @@
     {{/each}}
 
     <div class="input-group fluid">
-        <label for="title">{{t 'create-product.form.title.label'}}</label>
+        <label for="title">{{t 'create_product.form.title.label'}}</label>
         {{input id="title" value=model.title}}
     </div>
 
     <div class="input-group fluid">
-        <label for="description">{{t 'create-product.form.description.label'}}</label>
+        <label for="description">{{t 'create_product.form.description.label'}}</label>
         {{textarea id="description" value=model.description}}
     </div>
 
     <div class="input-group fluid">
-        <label for="price">{{t 'create-product.form.price.label'}}</label>
+        <label for="price">{{t 'create_product.form.price.label'}}</label>
         {{input id="price" type="number" step=".01" value=model.price}}
     </div>
 
     <div class="input-group fluid">
-        <label for="preferablePrice">{{t 'create-product.form.preferablePrice.label'}}</label>
+        <label for="preferablePrice">{{t 'create_product.form.preferablePrice.label'}}</label>
         {{input id="preferablePrice" type="number" step=".01" value=model.preferablePrice}}
     </div>
 
     <div class="input-group fluid">
-        <label for="bidStep">{{t 'create-product.form.bidStep.label'}}</label>
+        <label for="bidStep">{{t 'create_product.form.bidStep.label'}}</label>
         {{input id="bidStep" type="number" step="1" value=model.bidStep}}
     </div>
 

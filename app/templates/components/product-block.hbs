@@ -1,18 +1,19 @@
-<h3>
-    {{link-to product.title 'index.product-details' product}}
-</h3>
+<div class="section">
+    <h3>
+        {{link-to product.title 'index.product-details' product}}
+    </h3>
 
-<div class="description">
-    {{product.description}}
+    <div class="description">
+        {{product.description}}
+    </div>
+
+    <div class="price">
+        {{price product.price}}
+    </div>
+
+    <div class="bids">
+        {{bidsNumber}}
+    </div>
+
+    {{yield}}
 </div>
-
-<div class="price">
-    {{product.price}}
-</div>
-
-<div class="bids">
-    {{bidsNumber}}
-</div>
-
-{{yield}}
-

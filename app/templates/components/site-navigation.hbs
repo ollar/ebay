@@ -2,13 +2,6 @@
     <li>
         {{link-to (t 'navigation.create_product') 'create-product'}}
     </li>
-
-    {{#if session.isAuthenticated}}
-        <li>
-            <button {{action 'invalidateSession'}}>{{t 'navigation.logout'}}</button>
-        </li>
-    {{/if}}
 </ul>
-
 
 {{yield}}
