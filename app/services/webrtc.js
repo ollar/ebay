@@ -21,6 +21,8 @@ const dataConstraint = null;
 
 function bindChannelEventsOnMessage(event) {
     let message;
+    var store = this.get('store');
+
     try {
         message = JSON.parse(event.data);
     } catch (e) {
@@ -37,45 +39,25 @@ function bindChannelEventsOnMessage(event) {
 
     switch (message.eventName) {
         case 'block::create':
-            this.get('store')
-                .createRecord('block', message.data)
-                .saveApply();
+            store.push(store.normalize('block', message.data)).saveApply();
             break;
 
         case 'entity::create':
-            try {
-                var entity = this.get('store').peekRecord(
-                    message.data.entity,
-                    message.data.data.id
-                );
-                entity.setProperties(message.data.data);
-                entity.save();
-            } catch (e) {
-                this.get('store')
-                    .createRecord(message.data.entity, message.data.data)
-                    .save();
-            }
-            // this.get('store')
-            //     .peekRecord(message.data.entity, message.data.data.id)
-            //     .then(entity => {
-            //         entity.setProperties(message.data.data);
-            //         entity.save();
-            //     })
-            //     .catch(() => {
-            //         this.get('store')
-            //             .createRecord(message.data.entity, message.data.data)
-            //             .save();
-            //     });
+            store
+                .push(store.normalize(message.data.entity, message.data.data))
+                .save();
             break;
 
         case 'block::index_check':
             var lastBlockIndex = this.get('store')
                 .peekAll('block')
-                .filter(item => item.id !== this.id)
                 .sortBy('timestamp')
                 .get('lastObject.index');
 
-            if (!message.data.index || lastBlockIndex > message.data.index) {
+            if (
+                typeof message.data.index === 'undefined' ||
+                lastBlockIndex > message.data.index
+            ) {
                 var blocks = this.get('store')
                     .peekAll('block')
                     .slice(message.data.index);

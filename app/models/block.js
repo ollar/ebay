@@ -44,7 +44,10 @@ export default DS.Model.extend({
             this.set('previousHash', this.get('hash'));
         }
 
-        this.get('webrtc').broadcast(this.serialize(), 'block::create');
+        this.get('webrtc').broadcast(
+            this.serialize({ includeId: true }),
+            'block::create'
+        );
         return this._super(options);
     },
 
