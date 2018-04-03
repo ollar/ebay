@@ -1,6 +1,5 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { uuid } from 'ember-cli-uuid';
 
 import imageResize from '../utils/image-resize';
 
@@ -40,7 +39,6 @@ export default Controller.extend({
             this.get('session')
                 .authenticate('authenticator:local', {
                     username: this.get('username'),
-                    id: uuid(),
                     image: this.get('imageId'),
                 })
                 .then(() => {

@@ -20,6 +20,7 @@
     "broccoli-asset-rev": "^2.4.5",
     "dotenv": "^5.0.1",
     "ember-ajax": "^3.0.0",
+    "ember-browserify": "^1.2.2",
     "ember-cli": "~3.0.0",
     "ember-cli-app-version": "^3.0.0",
     "ember-cli-babel": "^6.6.0",
@@ -60,6 +61,7 @@
     "node": "^4.5 || 6.* || >= 7.*"
   },
   "dependencies": {
+    "fingerprintjs2": "^1.6.1",
     "mini.css": "^2.3.7"
   }
 }

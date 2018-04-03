@@ -49,18 +49,10 @@ export default DS.Model.extend({
     },
 
     saveApply() {
-        const id = this.get('entry.id');
-
-        var entity = this.get('store').peekRecord(this.get('entity'), id);
-
-        if (entity) {
-            entity.setProperties(this.get('entry'));
-        } else {
-            entity = this.get('store').createRecord(
-                this.get('entity'),
-                this.get('entry')
-            );
-        }
+        const store = this.get('store');
+        const entity = store.push(
+            store.normalize(this.get('entity'), this.get('entry'))
+        );
         entity.save({ norelations: true });
         DS.Model.prototype.save.apply(this, arguments);
     },
