@@ -1,8 +1,9 @@
 import Controller from '@ember/controller';
-
 import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default Controller.extend({
+    session: service(),
     bidPrice: computed('model.product.price', function() {
         return (
             this.get('model.product.price') +
@@ -19,8 +20,13 @@ export default Controller.extend({
             const bid = this.get('model.bid');
             const product = this.get('model.product');
 
-            bid.set('product', product.id);
-            bid.set('price', this.get('bidPrice'));
+            bid.setProperties({
+                product: product,
+                price: this.get('bidPrice'),
+                timestamp: Date.now(),
+                author: this.get('session.data.authenticated.id'),
+            });
+
             product.set('price', bid.get('price'));
             product.get('bids').addObject(bid);
 

@@ -82,6 +82,7 @@ function bindChannelEventsOnMessage(event) {
             break;
 
         case 'entity::request_data':
+            console.log(message);
             this.get('store')
                 .findRecord(message.data.entity, message.data.id)
                 .then(entity => {
@@ -350,7 +351,6 @@ export default Service.extend({
         const channel = peer.get('channel');
 
         if (message.length > 16384) {
-            console.log('11111');
             // return this.sendMessageChunked(uid, data, eventName);
             channel.send(
                 str({
@@ -383,8 +383,6 @@ export default Service.extend({
         while (message.length > 16384) {
             chunk = message.slice(0, 16384);
             message = message.slice(16384);
-
-            console.log(chunk);
         }
 
         // if (message.length > 16384) {
@@ -399,6 +397,8 @@ export default Service.extend({
 
     broadcast(data, eventName) {
         const peers = this.get('store').peekAll('user');
+
+        console.log(peers);
         return peers.map(item => this.send(item.id, data, eventName));
     },
 });

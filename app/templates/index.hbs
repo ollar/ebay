@@ -1,7 +1,5 @@
-<div class="row">
-    {{#each model.products as |product|}}
-        {{product-block product=product}}
-    {{/each}}
-</div>
+{{#each model.products as |product|}}
+    {{product-block product=product}}
+{{/each}}
 
 {{outlet}}

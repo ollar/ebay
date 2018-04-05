@@ -4,6 +4,10 @@
     <h3 class="section">{{t 'bid.title' model.title}}</h3>
     <p class="section">{{t 'bid.notice'}}</p>
 
+    <p class="section">
+        {{t 'bid.preferable_price' preferablePrice=(price model.product.preferablePrice)}}
+    </p>
+
     <form {{action 'makeBid' on='submit'}}>
         <div class="input-group fluid">
             <label for="bidPrice">{{t 'bid.form.bidPrice.label'}}</label>

@@ -7,9 +7,15 @@ export default Route.extend({
         const product_id =
             transition['params']['index.product-details']['product_id'];
 
+        const product = this.get('store').peekRecord('product', product_id);
+
+        if (product.get('sold')) {
+            transition.abort();
+        }
+
         return hash({
-            product: this.get('store').peekRecord('product', product_id),
             bid: this.get('store').createRecord('bid'),
+            product,
         });
     },
 });

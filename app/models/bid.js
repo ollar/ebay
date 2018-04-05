@@ -7,9 +7,5 @@ export default DS.Model.extend(WriteBlockMixin, {
     product: DS.belongsTo('product'),
     author: DS.attr('string'),
     price: DS.attr(),
-
-    save() {
-        this.set('author', this.get('session.data.authenticated.id'));
-        this._super(...arguments);
-    },
+    timestamp: DS.attr('string'),
 });

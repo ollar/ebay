@@ -39,11 +39,15 @@ export default {
     buttons: {
       bid: 'Bid',
     },
+
+    last_bidder: 'Last bidder - {{bidder.username}}',
   },
 
   bid: {
     title: 'Bid',
     notice: 'Please be responsible and avoid bidding until you are sure',
+    preferable_price:
+      'Preferable price for this product is {{preferablePrice}}',
     form: {
       bidPrice: {
         label: 'Bid Price',

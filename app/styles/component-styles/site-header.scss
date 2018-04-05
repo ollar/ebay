@@ -1,5 +1,8 @@
 & {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+
+    .logout-button {
+        margin-left: auto;
+    }
 }
