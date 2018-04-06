@@ -1,38 +1,42 @@
-<h1 class="title">
-    {{model.title}}
-</h1>
+<div class="container">
+    <h1 class="title">
+        {{model.title}}
+    </h1>
 
-{{#each model.images as |image|}}
-    <img src={{image.base64}} width={{image.width}} height={{image.height}}>
-{{/each}}
+    {{#each model.images as |image|}}
+        <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+    {{/each}}
 
-<div class="description">
-    {{model.description}}
-</div>
-
-<div class="price">
-    {{price model.price}}
-</div>
-
-<div class="bids">
-    {{bidsNumber}}
-</div>
-
-{{#unless model.sold}}
-    <div class="buttons-wrapper">
-        {{#if isAuthor}}
-            <button {{action 'sell_product'}}>
-                {{t 'product_details.buttons.grant_to_last_bidder'}}
-            </button>
-        {{else}}
-        {{link-to (t 'product_details.buttons.bid') 'index.product-details.bid'
-            class="bid button" }}
-        {{/if}}
+    <div class="description">
+        {{model.description}}
     </div>
-{{else}}
-    <h3>
-        {{t 'product_details.sold_message'}}
-    </h3>
-{{/unless}}
 
-{{outlet}}
+    <div class="price">
+        {{price model.price}}
+    </div>
+
+    <div class="bids">
+        {{bidsNumber}}
+    </div>
+
+    {{#unless model.sold}}
+        <div class="buttons-wrapper">
+            {{#if isAuthor}}
+                {{#if bidsNumber}}
+                    <button {{action 'sell_product'}}>
+                        {{t 'product_details.buttons.grant_to_last_bidder'}}
+                    </button>
+                {{/if}}
+            {{else}}
+            {{link-to (t 'product_details.buttons.bid') 'index.product-details.bid'
+                class="bid button" }}
+            {{/if}}
+        </div>
+    {{else}}
+        <h3>
+            {{t 'product_details.sold_message'}}
+        </h3>
+    {{/unless}}
+
+    {{outlet}}
+</div>

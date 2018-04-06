@@ -1,0 +1,10 @@
+<h3>
+    {{t 'order_block.title' date=data.timestamp}}
+</h3>
+
+buyer: {{data.buyer}}
+seller: {{data.seller}}
+
+{{product-block product=data.product nolink=true}}
+
+{{yield}}

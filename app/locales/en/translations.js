@@ -19,6 +19,7 @@ export default {
 
   navigation: {
     create_product: 'Create Product',
+    orders: 'Orders',
     logout: 'Log out',
   },
 
@@ -38,9 +39,11 @@ export default {
   product_details: {
     buttons: {
       bid: 'Bid',
+      grant_to_last_bidder: 'Grant to last bidder'
     },
 
     last_bidder: 'Last bidder - {{bidder.username}}',
+    sold_message: 'This item is sold',
   },
 
   bid: {
@@ -75,4 +78,8 @@ export default {
       },
     },
   },
+
+  order_block: {
+    title: 'Order from {{date}}'
+  }
 };

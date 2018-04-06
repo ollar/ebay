@@ -1,7 +1,15 @@
 <div class="section">
     <h3>
+        {{#if nolink}}
+        {{product.title}}
+        {{else}}
         {{link-to product.title 'index.product-details' product}}
+        {{/if}}
     </h3>
+
+    {{#each product.images as |image|}}
+        <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+    {{/each}}
 
     <div class="description">
         {{product.description}}
