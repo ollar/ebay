@@ -84,7 +84,9 @@ function bindChannelEventsOnMessage(event) {
         case 'entity::request_data':
             console.log(message);
             this.get('store')
-                .findRecord(message.data.entity, message.data.id)
+                .findRecord(message.data.entity, message.data.id, {
+                    quite: true,
+                })
                 .then(entity => {
                     if (entity)
                         this.send(
@@ -397,8 +399,6 @@ export default Service.extend({
 
     broadcast(data, eventName) {
         const peers = this.get('store').peekAll('user');
-
-        console.log(peers);
         return peers.map(item => this.send(item.id, data, eventName));
     },
 });
