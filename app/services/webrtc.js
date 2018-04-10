@@ -2,6 +2,8 @@ import Service from '@ember/service';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 
+import { run, later } from '@ember/runloop';
+
 import trace from '../utils/trace';
 import str from '../utils/str';
 
@@ -82,7 +84,6 @@ function bindChannelEventsOnMessage(event) {
             break;
 
         case 'entity::request_data':
-            console.log(message);
             this.get('store')
                 .findRecord(message.data.entity, message.data.id, {
                     quite: true,
@@ -398,7 +399,12 @@ export default Service.extend({
     },
 
     broadcast(data, eventName) {
-        const peers = this.get('store').peekAll('user');
-        return peers.map(item => this.send(item.id, data, eventName));
+        run(() => {
+            const peers = this.get('store').peekAll('user');
+            if (peers.get('length') === 0) {
+                later(this, () => this.broadcast(data, eventName), 10000);
+            }
+            return peers.map(item => this.send(item.id, data, eventName));
+        });
     },
 });
