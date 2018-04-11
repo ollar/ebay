@@ -9,5 +9,19 @@
 
     .card {
         z-index: 10;
+        max-height: 70vh;
+        border: 1px solid black;
+        box-shadow: 10px 10px 0 0 black;
+    }
+
+    .card > .section {
+        border: none;
+        padding: 1rem;
     }
 }
+
+form {
+    background: none;
+    border: none;
+}
+

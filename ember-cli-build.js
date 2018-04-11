@@ -21,8 +21,6 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   app.import('node_modules/mini.css/dist/mini-default.min.css');
-  app.import('node_modules/trix/dist/trix.js');
-  app.import('node_modules/trix/dist/trix.css');
 
   return app.toTree();
 };

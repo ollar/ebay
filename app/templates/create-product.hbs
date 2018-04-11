@@ -18,9 +18,7 @@
 
     <div class="input-group fluid">
         <label for="description">{{t 'create_product.form.description.label'}}</label>
-        {{!-- {{textarea id="description" value=model.description}} --}}
-        <input id="description" type="hidden" name="content" value={{model.description}} />
-        <trix-editor input="description"></trix-editor>
+        {{textarea id="description" value=model.description}}
     </div>
 
     <div class="input-group fluid">

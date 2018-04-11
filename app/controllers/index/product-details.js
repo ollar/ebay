@@ -18,6 +18,9 @@ export default Controller.extend({
     }),
 
     actions: {
+        goBack() {
+            window.history.back();
+        },
         sell_product() {
             const product = this.get('model');
             const lastBid = this.get('lastBid');

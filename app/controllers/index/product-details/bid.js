@@ -4,11 +4,14 @@ import { inject as service } from '@ember/service';
 
 export default Controller.extend({
     session: service(),
-    bidPrice: computed('model.product.price', function() {
-        return (
-            this.get('model.product.price') +
-            (this.get('model.product.bidStep') || 10)
-        );
+    // bidPrice: computed('model.product.price', function() {
+    bidPrice: computed('model.product.price', {
+        get() {
+            return (
+                this.get('model.product.price') +
+                (this.get('model.product.bidStep') || 10)
+            );
+        },
     }),
     actions: {
         goBack() {
@@ -19,6 +22,14 @@ export default Controller.extend({
         makeBid() {
             const bid = this.get('model.bid');
             const product = this.get('model.product');
+
+            if (+this.get('bidPrice') < +this.get('model.product.price')) {
+                this.set(
+                    'bidPrice',
+                    this.get('model.product.price') +
+                        (this.get('model.product.bidStep') || 10)
+                );
+            }
 
             bid.setProperties({
                 product: product,

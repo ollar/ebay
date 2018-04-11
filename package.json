@@ -62,7 +62,6 @@
   },
   "dependencies": {
     "fingerprintjs2": "^1.6.1",
-    "mini.css": "^2.3.7",
-    "trix": "^0.11.2"
+    "mini.css": "^2.3.7"
   }
 }
