@@ -26,6 +26,9 @@ export default Controller.extend({
                 });
             });
         },
+        removeImage(image) {
+            this.get('model.images').removeObject(image);
+        },
         submit() {
             const model = this.get('model');
             model.set('author', this.get('session.data.authenticated.id'));

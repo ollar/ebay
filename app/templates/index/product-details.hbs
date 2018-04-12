@@ -8,9 +8,24 @@
         {{model.title}}
     </h1>
 
-    {{#each model.images as |image|}}
-        <img src={{image.base64}} width={{image.width}} height={{image.height}}>
-    {{/each}}
+    <div class="tabs two">
+        {{#each model.images as |image index|}}
+            <input id="tabC-{{index }}" type='radio' name='tabGroupC' >
+        {{/each}}
+        <div class='row'>
+            {{#each model.images as |image index|}}
+                <div>
+                    <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+                </div>
+            {{/each}}
+        </div>
+
+        {{#each model.images as |image index|}}
+            <label for="tabC-{{index}}">
+                <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+            </label>
+        {{/each}}
+    </div>
 
     <div class="description">
         {{model.description}}

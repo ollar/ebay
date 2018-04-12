@@ -8,6 +8,7 @@
     {{#each model.images as |image|}}
         <div class="image-wrapper">
             <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+            <button class="remove" type="button" {{action 'removeImage' image}}>remove</button>
         </div>
     {{/each}}
 
