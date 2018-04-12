@@ -1,14 +1,14 @@
-<nav>
-    {{link-to (t 'links.home') 'index'}}
-
-    {{link-to (t 'navigation.create_product') 'create-product'}}
-    {{link-to (t 'navigation.orders') 'orders'}}
-
-</nav>
-
-{{yield}}
-
 {{#if session.isAuthenticated}}
+    <nav>
+        {{link-to (t 'links.home') 'index'}}
+
+        {{link-to (t 'navigation.create_product') 'create-product'}}
+        {{link-to (t 'navigation.orders') 'orders'}}
+
+    </nav>
+
+    {{yield}}
+
     <button {{action 'invalidateSession'}} class="logout-button">
         {{t 'navigation.logout'}}
     </button>

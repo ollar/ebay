@@ -13,6 +13,7 @@
     left: 0;
     right: 0;
     background-color: map-get($colours, white);
+    z-index: 10;
 
     padding: ms(2) ms(1);
 

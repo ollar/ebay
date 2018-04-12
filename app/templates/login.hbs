@@ -1,20 +1,22 @@
-<h1>
+<h1 class="title">
     {{ t 'login.title'}}
 </h1>
 
-<form {{action "submit" on="submit"}}>
-    <div class="input-group fluid">
+<form {{action "submit" on="submit"}} class="aligned">
+    {{#if image}}
+        <div class="form-line">
+            <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+        </div>
+    {{else}}
+        {{images-drop-area uploadImage=(action 'uploadImage') class="form-line"}}
+    {{/if}}
+
+    <div class="form-line">
         <label for="username">{{t 'login.form.username.label'}}</label>
         {{input name="username" value=username}}
     </div>
 
-    {{images-drop-area uploadImage=(action 'uploadImage')}}
-
-    {{#if image}}
-        <img src={{image.base64}} width={{image.width}} height={{image.height}}>
-    {{/if}}
-
-    <div class="button-group">
+    <div class="buttons-wrapper">
         <button type="submit">
             {{t 'buttons.submit'}}
         </button>

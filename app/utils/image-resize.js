@@ -3,8 +3,8 @@ export default function imageResize(image) {
         var img = new Image();
         var imageUrl = URL.createObjectURL(image);
 
-        const IMG_MAX_WIDTH = 300;
-        const IMG_MAX_HEIGHT = 500;
+        const IMG_MAX_WIDTH = 800;
+        const IMG_MAX_HEIGHT = 600;
 
         if (image.type.indexOf('image') < 0) {
             return nah();
