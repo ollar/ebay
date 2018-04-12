@@ -1,4 +1,4 @@
-<div style="width: 200px"
+<div
     title={{t 'messages.drop_image_here'}}
     class="image-drop-area"
     ondragenter={{action 'dragEnter'}}
@@ -6,13 +6,11 @@
     ondragleave={{action 'dragLeave'}}
     ondrop={{action 'drop'}}
 >
-    <label class="dropimage">
-        <input
-            title="Drop image or click me"
-            type="file"
-            id="file-input"
-            accept="image/*"
-            onchange={{action 'inputChange'}} />
-    </label>
+    <input
+        title={{t 'messages.drop_image_here'}}
+        type="file"
+        id="file-input"
+        accept="image/*"
+        onchange={{action 'inputChange'}} />
     {{yield}}
 </div>

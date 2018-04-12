@@ -1,15 +1,23 @@
 <div class="section">
-    <h3>
+    <h3 class="title">
         {{#if nolink}}
-        {{product.title}}
+            {{product.title}}
         {{else}}
-        {{link-to product.title 'index.product-details' product}}
+            {{link-to product.title 'index.product-details' product}}
         {{/if}}
+
+        <div class="bids" title={{t 'index.product-details.bids'}}>
+            ({{bidsNumber}})
+        </div>
     </h3>
 
-    {{#each product.images as |image|}}
-        <img src={{image.base64}} width={{image.width}} height={{image.height}}>
-    {{/each}}
+    {{#swiper-container}}
+        {{#each product.images as |image|}}
+            <div class="swiper-slide">
+                <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+            </div>
+        {{/each}}
+    {{/swiper-container}}
 
     <div class="description">
         {{product.description}}
@@ -17,10 +25,6 @@
 
     <div class="price">
         {{price product.price}}
-    </div>
-
-    <div class="bids">
-        {{bidsNumber}}
     </div>
 
     {{yield}}

@@ -1,9 +1,9 @@
-<h1>
+<h1 class="title">
     {{t 'create_product.title'}}
 </h1>
 
-<form {{action 'submit' on="submit"}}>
-    {{images-drop-area uploadImage=(action 'uploadImage')}}
+<form class="aligned" {{action 'submit' on="submit"}}>
+    {{images-drop-area uploadImage=(action 'uploadImage') class="form-line"}}
 
     {{#each model.images as |image|}}
         <div class="image-wrapper">
@@ -12,32 +12,32 @@
         </div>
     {{/each}}
 
-    <div class="input-group fluid">
+    <div class="form-line">
         <label for="title">{{t 'create_product.form.title.label'}}</label>
         {{input id="title" value=model.title}}
     </div>
 
-    <div class="input-group fluid">
+    <div class="form-line">
         <label for="description">{{t 'create_product.form.description.label'}}</label>
         {{textarea id="description" value=model.description}}
     </div>
 
-    <div class="input-group fluid">
+    <div class="form-line">
         <label for="price">{{t 'create_product.form.price.label'}}</label>
         {{input id="price" type="number" step=".01" value=model.price}}
     </div>
 
-    <div class="input-group fluid">
+    <div class="form-line">
         <label for="preferablePrice">{{t 'create_product.form.preferablePrice.label'}}</label>
         {{input id="preferablePrice" type="number" step=".01" value=model.preferablePrice}}
     </div>
 
-    <div class="input-group fluid">
+    <div class="form-line">
         <label for="bidStep">{{t 'create_product.form.bidStep.label'}}</label>
         {{input id="bidStep" type="number" step="1" value=model.bidStep}}
     </div>
 
-    <div class="button-group">
+    <div class="buttons-wrapper">
         <button type="submit">
             {{t 'buttons.submit'}}
         </button>

@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "fingerprintjs2": "^1.6.1",
-    "mini.css": "^2.3.7",
-    "picnic": "^6.5.0"
+    "normalize.css": "^8.0.0",
+    "swiper": "^4.2.2"
   }
 }

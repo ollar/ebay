@@ -6,26 +6,19 @@
     </div>
     <h1 class="title">
         {{model.title}}
+
+        <div class="bids">
+            ({{bidsNumber}})
+        </div>
     </h1>
 
-    <div class="tabs two">
+    {{#swiper-container}}
         {{#each model.images as |image index|}}
-            <input id="tabC-{{index }}" type='radio' name='tabGroupC' >
-        {{/each}}
-        <div class='row'>
-            {{#each model.images as |image index|}}
-                <div>
-                    <img src={{image.base64}} width={{image.width}} height={{image.height}}>
-                </div>
-            {{/each}}
-        </div>
-
-        {{#each model.images as |image index|}}
-            <label for="tabC-{{index}}">
+            <div class="swiper-slide">
                 <img src={{image.base64}} width={{image.width}} height={{image.height}}>
-            </label>
+            </div>
         {{/each}}
-    </div>
+    {{/swiper-container}}
 
     <div class="description">
         {{model.description}}
@@ -33,10 +26,6 @@
 
     <div class="price">
         {{price model.price}}
-    </div>
-
-    <div class="bids">
-        {{bidsNumber}}
     </div>
 
     {{#unless model.sold}}

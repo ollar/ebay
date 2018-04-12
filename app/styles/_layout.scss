@@ -9,6 +9,22 @@ body > .ember-view {
     flex-direction: column;
 }
 
+header,
+footer {
+    padding: ms(1) ms(0);
+    border: solid map-get($colours, silver);
+
+    @include md() {
+        padding: ms(3) ms(2);
+    }
+}
+
 .main {
     flex-grow: 2;
+    padding: ms(2) ms(1);
+    max-width: 600px;
+
+    @include md() {
+        padding: ms(3) ms(2);
+    }
 }

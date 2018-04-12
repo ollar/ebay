@@ -1,0 +1,384 @@
+/*csslint box-model:false*/
+/*
+Box-model set to false because we're setting a height on select elements, which
+also have border and padding. This is done because some browsers don't render
+the padding. We explicitly set the box-model for select elements to border-box,
+so we can ignore the csslint warning.
+*/
+
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='url'],
+input[type='date'],
+input[type='month'],
+input[type='time'],
+input[type='datetime'],
+input[type='datetime-local'],
+input[type='week'],
+input[type='number'],
+input[type='search'],
+input[type='tel'],
+input[type='color'],
+select,
+textarea {
+    padding: 0.5em 0.6em;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+/*
+Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
+since IE8 won't execute CSS that contains a CSS3 selector.
+*/
+input:not([type]) {
+    padding: 0.5em 0.6em;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Chrome (as of v.32/34 on OS X) needs additional room for color to display. */
+/* May be able to remove this tweak as color inputs become more standardized across browsers. */
+input[type='color'] {
+    padding: 0.2em 0.5em;
+}
+
+input[type='text']:focus,
+input[type='password']:focus,
+input[type='email']:focus,
+input[type='url']:focus,
+input[type='date']:focus,
+input[type='month']:focus,
+input[type='time']:focus,
+input[type='datetime']:focus,
+input[type='datetime-local']:focus,
+input[type='week']:focus,
+input[type='number']:focus,
+input[type='search']:focus,
+input[type='tel']:focus,
+input[type='color']:focus,
+select:focus,
+textarea:focus {
+    outline: 0;
+    border-color: map-get($colours, blue);
+}
+
+/*
+Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
+since IE8 won't execute CSS that contains a CSS3 selector.
+*/
+input:not([type]):focus {
+    outline: 0;
+    border-color: map-get($colours, blue);
+}
+
+input[type='file']:focus,
+input[type='radio']:focus,
+input[type='checkbox']:focus {
+    outline: thin solid map-get($colours, blue);
+    outline: 1px auto map-get($colours, blue);
+}
+.checkbox,
+.radio {
+    margin: 0.5em 0;
+    display: block;
+}
+
+input[type='text'][disabled],
+input[type='password'][disabled],
+input[type='email'][disabled],
+input[type='url'][disabled],
+input[type='date'][disabled],
+input[type='month'][disabled],
+input[type='time'][disabled],
+input[type='datetime'][disabled],
+input[type='datetime-local'][disabled],
+input[type='week'][disabled],
+input[type='number'][disabled],
+input[type='search'][disabled],
+input[type='tel'][disabled],
+input[type='color'][disabled],
+select[disabled],
+textarea[disabled] {
+    cursor: not-allowed;
+    background-color: #eaeded;
+    color: #cad2d3;
+}
+
+/*
+Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
+since IE8 won't execute CSS that contains a CSS3 selector.
+*/
+input:not([type])[disabled] {
+    cursor: not-allowed;
+    background-color: #eaeded;
+    color: #cad2d3;
+}
+input[readonly],
+select[readonly],
+textarea[readonly] {
+    background-color: #eee; /* menu hover bg color */
+    color: #777; /* menu text color */
+    border-color: #ccc;
+}
+
+input:focus:invalid,
+textarea:focus:invalid,
+select:focus:invalid {
+    color: map-get($colours, red);
+    border-color: darken(map-get($colours, red), 10%);
+}
+input[type='file']:focus:invalid:focus,
+input[type='radio']:focus:invalid:focus,
+input[type='checkbox']:focus:invalid:focus {
+    outline-color: darken(map-get($colours, red), 10%);
+}
+select {
+    /* Normalizes the height; padding is not sufficient. */
+    height: 2.25em;
+    border: 1px solid #ccc;
+    background-color: white;
+}
+select[multiple] {
+    height: auto;
+}
+label {
+    margin: 0.5em 0 0.2em;
+}
+fieldset {
+    margin: 0;
+    padding: 0.35em 0 0.75em;
+    border: 0;
+}
+legend {
+    display: block;
+    width: 100%;
+    padding: 0.3em 0;
+    margin-bottom: 0.3em;
+    color: #333;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+form.stacked input[type='text'],
+form.stacked input[type='password'],
+form.stacked input[type='email'],
+form.stacked input[type='url'],
+form.stacked input[type='date'],
+form.stacked input[type='month'],
+form.stacked input[type='time'],
+form.stacked input[type='datetime'],
+form.stacked input[type='datetime-local'],
+form.stacked input[type='week'],
+form.stacked input[type='number'],
+form.stacked input[type='search'],
+form.stacked input[type='tel'],
+form.stacked input[type='color'],
+form.stacked input[type='file'],
+form.stacked select,
+form.stacked label,
+form.stacked textarea {
+    display: block;
+    margin: 0.25em 0;
+}
+
+/*
+Need to separate out the :not() selector from the rest of the CSS 2.1 selectors
+since IE8 won't execute CSS that contains a CSS3 selector.
+*/
+form.stacked input:not([type]) {
+    display: block;
+    margin: 0.25em 0;
+}
+form.aligned input,
+form.aligned textarea,
+form.aligned select,
+/* NOTE: pure-help-inline is deprecated. Use .pure-form-message-inline instead. */
+form.aligned .help-inline,
+.message-inline {
+    display: block;
+    width: 100%;
+}
+form.aligned textarea {
+    vertical-align: top;
+}
+
+/* Aligned Forms */
+form.aligned .form-line {
+    display: flex;
+}
+form.aligned .form-line label {
+    text-align: right;
+    flex-shrink: 0;
+    line-height: 2;
+    vertical-align: middle;
+    width: 10em;
+    margin: 0 1em 0 0;
+}
+form.aligned .buttons-wrapper {
+    margin: 1.5em 0 0 11em;
+}
+
+/* Grouped Inputs */
+form .group fieldset {
+    margin-bottom: 10px;
+}
+form .group input,
+form .group textarea {
+    display: block;
+    padding: 10px;
+    margin: 0 0 -1px;
+    border-radius: 0;
+    position: relative;
+    top: -1px;
+}
+
+// =============================================================================
+// =============================================================================
+// =============================================================================
+
+.form-line {
+    margin: 0 0 1.5rem;
+}
+
+button,
+.button {
+    /* Structure */
+    display: inline-block;
+    zoom: 1;
+    line-height: normal;
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    -webkit-user-drag: none;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+/* Firefox: Get rid of the inner focus border */
+button::-moz-focus-inner,
+.button::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+/* Inherit .pure-g styles */
+.button-group {
+    letter-spacing: -0.31em; /* Webkit: collapse white-space between units */
+    *letter-spacing: normal; /* reset IE < 8 */
+    *word-spacing: -0.43em; /* IE < 8: collapse white-space between units */
+    text-rendering: optimizespeed; /* Webkit: fixes text-rendering: optimizeLegibility */
+}
+
+.opera-only :-o-prefocus,
+.button-group {
+    word-spacing: -0.43em;
+}
+
+.button-group button,
+.button-group .button {
+    letter-spacing: normal;
+    word-spacing: normal;
+    vertical-align: top;
+    text-rendering: auto;
+}
+
+// =============================================================================
+
+button,
+.button {
+    font-family: inherit;
+    font-size: 100%;
+    padding: 0.5em 1em;
+    color: #444; /* rgba not supported (IE 8) */
+    color: rgba(0, 0, 0, 0.8); /* rgba supported */
+    border: 1px solid #999; /*IE 6/7/8*/
+    border: none rgba(0, 0, 0, 0); /*IE9 + everything else*/
+    background-color: #e6e6e6;
+    text-decoration: none;
+    border-radius: 2px;
+}
+
+button:hover,
+button:focus,
+.button-hover,
+.button:hover,
+.button:focus {
+    background-image: linear-gradient(
+        transparent,
+        rgba(0, 0, 0, 0.05) 40%,
+        rgba(0, 0, 0, 0.1)
+    );
+}
+
+button:focus,
+.button:focus {
+    outline: 0;
+}
+
+button:active,
+.button-active,
+.button:active {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset,
+        0 0 6px rgba(0, 0, 0, 0.2) inset;
+    border-color: #000\9;
+}
+
+button[disabled],
+.button[disabled],
+.button-disabled,
+.button-disabled:hover,
+.button-disabled:focus,
+.button-disabled:active {
+    border: none;
+    background-image: none;
+    /* csslint ignore:start */
+    filter: alpha(opacity=40);
+    /* csslint ignore:end */
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+    pointer-events: none;
+}
+
+button.hidden,
+.button-hidden {
+    display: none;
+}
+
+button.primary,
+.button-primary,
+.button-selected,
+a.button-primary,
+a.button-selected {
+    background-color: rgb(0, 120, 231);
+    color: #fff;
+}
+
+/* Button Groups */
+.button-group button,
+.button-group .button {
+    margin: 0;
+    border-radius: 0;
+    border-right: 1px solid #111; /* fallback color for rgba() for IE7/8 */
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.button-group button:first-child,
+.button-group .button:first-child {
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+.button-group button:last-child,
+.button-group .button:last-child {
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-right: none;
+}

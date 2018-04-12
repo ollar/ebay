@@ -20,8 +20,10 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  // app.import('node_modules/mini.css/dist/mini-default.min.css');
-  app.import('node_modules/picnic/picnic.min.css');
+  app.import('node_modules/normalize.css/normalize.css');
+
+  app.import('node_modules/swiper/dist/css/swiper.min.css');
+  app.import('node_modules/swiper/dist/js/swiper.js');
 
   return app.toTree();
 };

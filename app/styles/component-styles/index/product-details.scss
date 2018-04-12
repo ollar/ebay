@@ -2,12 +2,36 @@
     position: relative;
 }
 
+.back-button {
+    margin: 0 0 ms(2);
+}
+
 .product-details {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #fff;
+    background-color: map-get($colours, white);
+
+    padding: ms(2) ms(1);
+
+    @include md() {
+        padding: ms(3) ms(2);
+    }
 }
 
+.swiper-container {
+    margin-bottom: ms(2);
+}
+
+.description {
+    color: map-get($colours, gray);
+    margin-bottom: ms(2);
+}
+
+.bids {
+    display: inline-block;
+    font-weight: 100;
+    color: map-get($colours, red);
+}
