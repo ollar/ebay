@@ -14,7 +14,7 @@
     {{#swiper-container}}
         {{#each product.images as |image|}}
             <div class="swiper-slide">
-                <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+                <img class="img" src={{image.base64}} width={{image.width}} height={{image.height}}>
             </div>
         {{/each}}
     {{/swiper-container}}

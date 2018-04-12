@@ -212,14 +212,22 @@ form.aligned textarea {
 /* Aligned Forms */
 form.aligned .form-line {
     display: flex;
+    flex-direction: column;
+
+    @include sm() {
+        flex-direction: row;
+    }
 }
 form.aligned .form-line label {
-    text-align: right;
-    flex-shrink: 0;
     line-height: 2;
     vertical-align: middle;
-    width: 10em;
     margin: 0 1em 0 0;
+
+    @include sm() {
+        text-align: right;
+        width: 10em;
+        flex-shrink: 0;
+    }
 }
 form.aligned .buttons-wrapper {
     margin: 1.5em 0 0 11em;

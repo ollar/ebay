@@ -5,7 +5,7 @@
 <form {{action "submit" on="submit"}} class="aligned">
     {{#if image}}
         <div class="form-line">
-            <img src={{image.base64}} width={{image.width}} height={{image.height}}>
+            <img class="img" src={{image.base64}} width={{image.width}} height={{image.height}}>
         </div>
     {{else}}
         {{images-drop-area uploadImage=(action 'uploadImage') class="form-line"}}
