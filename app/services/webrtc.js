@@ -1,6 +1,7 @@
 import Service from '@ember/service';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 
 import { run, later } from '@ember/runloop';
 
@@ -54,22 +55,27 @@ function bindChannelEventsOnMessage(event) {
             var lastBlockIndex = this.get('store')
                 .peekAll('block')
                 .sortBy('timestamp')
-                .get('lastObject.index');
+                .getWithDefault('lastObject.index', 0);
 
-            if (
-                typeof message.data.index === 'undefined' ||
-                lastBlockIndex > message.data.index
-            ) {
+            // debugger;
+
+            if (lastBlockIndex > message.data.index) {
                 var blocks = this.get('store')
                     .peekAll('block')
                     .slice(message.data.index);
 
                 for (let i = 0; i < blocks.length; i += 10) {
-                    this.send(
-                        event.currentTarget.toUid,
-                        blocks.slice(i, i + 10),
-                        'block::update_indexes'
-                    );
+                    run(() => {
+                        this.send(
+                            event.currentTarget.toUid,
+                            blocks
+                                .slice(i, i + 10)
+                                .map(item =>
+                                    item.serialize({ includeId: true })
+                                ),
+                            'block::update_indexes'
+                        );
+                    });
                 }
             }
             break;
@@ -113,14 +119,17 @@ function bindChannelEventsOnMessage(event) {
 function onSendChannelStateChangeHandler(channel) {
     if (channel.readyState === 'open') {
         this.set(`opened.${channel.toUid}`, true);
+        var lastBlock = this.get('store')
+            .peekAll('block')
+            .filter(item => item.id !== this.id)
+            .sortBy('timestamp')
+            .getWithDefault('lastObject', new EmberObject());
+
         this.send(
             channel.toUid,
             {
-                index: this.get('store')
-                    .peekAll('block')
-                    .filter(item => item.id !== this.id)
-                    .sortBy('timestamp')
-                    .get('lastObject.index'),
+                index: lastBlock.getWithDefault('index', 0),
+                timestamp: lastBlock.getWithDefault('timestamp', 0),
             },
             'block::index_check'
         );
