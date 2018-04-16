@@ -2,4 +2,8 @@
     {{product-block product=product}}
 {{/each}}
 
+{{#each model.users as |user|}}
+    {{user-block data=user}}
+{{/each}}
+
 {{outlet}}
