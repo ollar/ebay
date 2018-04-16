@@ -39,7 +39,8 @@ export default {
   product_details: {
     buttons: {
       bid: 'Bid',
-      grant_to_last_bidder: 'Grant to last bidder'
+      grant_to_last_bidder: 'Grant to last bidder',
+      goBack: 'Back',
     },
 
     last_bidder: 'Last bidder - {{bidder.username}}',
