@@ -1,1 +1,6 @@
-{{yield}}
+<div class="modal-overlay" {{action 'close' on="click"}}></div>
+<button class="modal-close" {{action 'close'}}></button>
+
+<div class="modal-window">
+    {{yield}}
+</div>

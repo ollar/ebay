@@ -1,5 +1,7 @@
 {{#each model.products as |product|}}
     {{product-block product=product}}
+{{else}}
+    {{t 'messages.empty'}}
 {{/each}}
 
 {{#each model.users as |user|}}

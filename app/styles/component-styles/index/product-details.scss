@@ -1,5 +1,7 @@
 & {
-    position: relative;
+    position: absolute;
+    overflow: hidden;
+    @include full-screen;
 }
 
 .back-button {
@@ -29,6 +31,10 @@
 
 .description {
     color: map-get($colours, gray);
+    margin-bottom: ms(2);
+}
+
+.price {
     margin-bottom: ms(2);
 }
 

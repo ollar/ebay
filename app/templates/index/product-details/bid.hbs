@@ -1,26 +1,27 @@
-<div class="modal">
-  <div class="card">
-    <label for="modal-toggle" class="close" {{action 'goBack' bubbles=false}}></label>
-    <h3 class="section">{{t 'bid.title' model.title}}</h3>
-    <p class="section">{{t 'bid.notice'}}</p>
+{{#modal-wrapper _close=(action 'goBack')}}
+    <h3 class="title">{{t 'bid.title' model.title}}</h3>
+  <div class="content">
+
+    <p class="note">{{t 'bid.notice'}}</p>
 
     {{#if model.product.preferablePrice}}
-    <p class="section">
+    <p class="note">
         {{t 'bid.preferable_price' preferablePrice=(price model.product.preferablePrice)}}
     </p>
     {{/if}}
 
     <form {{action 'makeBid' on='submit'}}>
-        <div class="input-group fluid">
+        <div class="form-line">
             <label for="bidPrice">{{t 'bid.form.bidPrice.label'}}</label>
             {{input id="bidPrice" type="text" value=bidPrice}}
         </div>
 
-        <button>
+        <button class="buttons-wrapper">
             {{t 'buttons.submit'}}
         </button>
     </form>
   </div>
-</div>
 
 {{outlet}}
+
+{{/modal-wrapper}}

@@ -15,6 +15,12 @@ export default {
 
   buttons: {
     submit: 'Submit',
+    cancel: 'Cancel',
+  },
+
+  messages: {
+    empty: 'Nothing here yet',
+    drop_image_here: 'Drop images here',
   },
 
   navigation: {
@@ -81,6 +87,6 @@ export default {
   },
 
   order_block: {
-    title: 'Order from {{date}}'
-  }
+    title: 'Order from {{date}}',
+  },
 };
