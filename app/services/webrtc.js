@@ -10,9 +10,37 @@ import str from '../utils/str';
 
 const pcConfig = {
     iceServers: [
-        { urls: 'stun:stun3.l.google.com:19302' },
+        { url: 'stun:stun01.sipphone.com' },
+        { url: 'stun:stun.ekiga.net' },
+        { url: 'stun:stun.fwdnet.net' },
+        { url: 'stun:stun.ideasip.com' },
+        { url: 'stun:stun.iptel.org' },
+        { url: 'stun:stun.rixtelecom.se' },
+        { url: 'stun:stun.schlund.de' },
+        { url: 'stun:stun.l.google.com:19302' },
+        { url: 'stun:stun1.l.google.com:19302' },
+        { url: 'stun:stun2.l.google.com:19302' },
+        { url: 'stun:stun3.l.google.com:19302' },
+        { url: 'stun:stun4.l.google.com:19302' },
+        { url: 'stun:stunserver.org' },
+        { url: 'stun:stun.softjoys.com' },
+        { url: 'stun:stun.voiparound.com' },
+        { url: 'stun:stun.voipbuster.com' },
+        { url: 'stun:stun.voipstunt.com' },
+        { url: 'stun:stun.voxgratia.org' },
+        { url: 'stun:stun.xten.com' },
         {
-            urls: 'turn:192.158.29.39:3478?transport=udp',
+            url: 'turn:numb.viagenie.ca',
+            credential: 'muazkh',
+            username: 'webrtc@live.com',
+        },
+        {
+            url: 'turn:192.158.29.39:3478?transport=udp',
+            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+            username: '28224511:1379330808',
+        },
+        {
+            url: 'turn:192.158.29.39:3478?transport=tcp',
             credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
             username: '28224511:1379330808',
         },
@@ -95,15 +123,18 @@ function bindChannelEventsOnMessage(event) {
                     quite: true,
                 })
                 .then(entity => {
-                    if (entity)
-                        this.send(
-                            event.currentTarget.toUid,
-                            {
-                                entity: message.data.entity,
-                                data: entity.serialize({ includeId: true }),
-                            },
-                            'entity::create'
-                        );
+                    if (entity) {
+                        run(() => {
+                            this.send(
+                                event.currentTarget.toUid,
+                                {
+                                    entity: message.data.entity,
+                                    data: entity.serialize({ includeId: true }),
+                                },
+                                'entity::create'
+                            );
+                        });
+                    }
                 });
 
             break;
@@ -363,7 +394,6 @@ export default Service.extend({
         const channel = peer.get('channel');
 
         if (message.length > 16384) {
-            // return this.sendMessageChunked(uid, data, eventName);
             channel.send(
                 str({
                     type: 'notification',
@@ -371,6 +401,7 @@ export default Service.extend({
                     data: { id: data.data.id, length: message.length },
                 })
             );
+            return this.sendMessageChunked(uid, message);
         }
 
         if (channel.readyState === 'open') {
@@ -378,24 +409,20 @@ export default Service.extend({
         }
     },
 
-    sendMessageChunked(uid, data, eventName) {
+    sendMessageChunked(uid, message) {
         const peer = this.get('store').peekRecord('user', uid);
         const channel = peer.get('channel');
 
-        let message = str({
-            type: 'message',
-            data,
-            eventName,
-        });
+        trace('sendMessageChunked', uid);
 
         if (channel.readyState !== 'open') return;
 
-        let chunk;
+        channel.send(message.slice(0, 16384));
 
-        while (message.length > 16384) {
-            chunk = message.slice(0, 16384);
-            message = message.slice(16384);
-        }
+        if (message.slice(16384).length > 16384)
+            return run(() =>
+                this.sendMessageChunked(uid, message.slice(16384))
+            );
 
         // if (message.length > 16384) {
         //     channel.send(
