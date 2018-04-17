@@ -7,6 +7,7 @@ import { run, later } from '@ember/runloop';
 
 import trace from '../utils/trace';
 import str from '../utils/str';
+import Middleware from '../utils/middleware';
 
 const pcConfig = {
     iceServers: [
@@ -229,16 +230,26 @@ export default Service.extend({
         return connection;
     },
 
-    createChannel({ uid: toUid }) {
+    createChannel({ uid: toUid, channelId }) {
+        channelId = channelId || toUid;
+
         const peer = this.get('store').peekRecord('user', toUid);
         const channel = peer
             .get('connection')
-            .createDataChannel(toUid, dataConstraint);
+            .createDataChannel(channelId, dataConstraint);
+        channel.binaryType = 'arraybuffer';
 
-        trace('create channel: ' + toUid);
+        trace('create channel: ' + channelId);
 
         channel.toUid = toUid;
-        peer.set('channel', channel);
+
+        peer.set(`channel.${channelId}`, channel);
+
+        // if (channelId === toUid) {
+        //     peer.set('channel', channel);
+        // } else {
+        //     peer.set(channelId, channel);
+        // }
         peer.save();
 
         // bind channel events
@@ -339,10 +350,25 @@ export default Service.extend({
 
     _receivedChannelCallback(e, toUid) {
         const channel = e.channel;
+        channel.binaryType = 'arraybuffer';
+
+        console.log(channel);
+
         const peer = this.get('store').peekRecord('user', toUid);
         channel.toUid = toUid;
 
-        peer.set('channel', channel);
+        peer.set(`channel.${channel.label}`, channel);
+
+        console.log(peer.get('channel.toUid'));
+
+        // if (peer.get('channel.label') !== channel.label) {
+        //     peer.set('channel', channel);
+        // } else {
+        //     console.log('me he');
+        //     peer.set(channel.label, channel);
+        // }
+
+        // peer.set('channel', channel);
 
         this._bindChannelEvents(channel);
     },
@@ -401,12 +427,81 @@ export default Service.extend({
                     data: { id: data.data.id, length: message.length },
                 })
             );
-            return this.sendMessageChunked(uid, message);
+            return this.sendLongMessage(uid, data, message, eventName);
+            // return this.sendMessageChunked(uid, message);
         }
 
         if (channel.readyState === 'open') {
             channel.send(message);
         }
+    },
+
+    _createDataChannel(uid, next) {
+        var channel = this.createChannel({
+            uid,
+            channelId: uid + '_channel_data',
+        });
+
+        channel.addEventListener('open', function() {
+            next(channel);
+        });
+    },
+
+    _closeDataChannels(next, channel) {
+        channel.close();
+        next();
+    },
+
+    _sendTransferPrepareInfo(next, channel, data) {
+        if (channel && channel.readyState === 'open') {
+            channel.send(
+                str({
+                    type: '__dataDescription',
+                    data,
+                })
+            );
+        }
+
+        return next(channel);
+    },
+
+    _sendTransferCompleteInfo(next, channel) {
+        if (channel && channel.readyState === 'open') {
+            channel.send(
+                str({
+                    type: '__dataTransferComplete',
+                    fromUid: this.get('UID'),
+                })
+            );
+        }
+
+        return next(channel);
+    },
+
+    sendLongMessage(uid, data, message, eventName) {
+        var middleware = new Middleware();
+
+        return;
+
+        middleware.use(next => this._createDataChannel(uid, next));
+        middleware.use((next, channel) =>
+            this._sendTransferPrepareInfo(next, channel, data)
+        );
+        middleware.use((next, channel) => {
+            console.log('sending data', channel);
+
+            next(channel);
+        });
+        middleware.use((next, channel) => {
+            this._sendTransferCompleteInfo(next, channel);
+            next(channel);
+        });
+
+        middleware.use((next, channel) => {
+            this._closeDataChannels(next, channel);
+        });
+
+        middleware.go(() => console.log(uid, data, eventName));
     },
 
     sendMessageChunked(uid, message) {
@@ -423,15 +518,6 @@ export default Service.extend({
             return run(() =>
                 this.sendMessageChunked(uid, message.slice(16384))
             );
-
-        // if (message.length > 16384) {
-        //     channel.send(
-        //         str({
-        //             type: 'chunk',
-        //             message,
-        //         })
-        //     );
-        // }
     },
 
     broadcast(data, eventName) {
