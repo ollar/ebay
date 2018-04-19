@@ -209,23 +209,23 @@ export default Service.extend({
             return _this._onIceCandidate(e, toUid);
         };
 
-        const user = this.get('store').peekRecord('user', toUid);
+        var user = this.get('store').peekRecord('user', toUid);
 
         if (user) {
             user.setProperties({
                 id: toUid,
                 username,
                 image,
-                connection,
             });
         } else {
-            this.get('store').createRecord('user', {
+            user = this.get('store').createRecord('user', {
                 id: toUid,
                 username,
                 image,
-                connection,
             });
         }
+
+        user.set('connection', connection);
 
         return connection;
     },
@@ -379,6 +379,13 @@ export default Service.extend({
         return onSendChannelStateChangeHandler.call(this, channel);
     },
 
+    _queueMessage(uid, data, eventName) {
+        this.set(`messageQueue.${uid}`, [
+            ...this.getWithDefault(`messageQueue.${uid}`, []),
+            { eventName, data },
+        ]);
+    },
+
     send(uid, data, eventName) {
         const peer = this.get('store').peekRecord('user', uid);
         const message = str({
@@ -388,16 +395,18 @@ export default Service.extend({
         });
 
         if (!this.get(`opened.${uid}`)) {
-            this.set(`messageQueue.${uid}`, [
-                ...this.getWithDefault(`messageQueue.${uid}`, []),
-                { eventName, data },
-            ]);
+            this._queueMessage(uid, data, eventName);
             return;
         }
 
-        if (peer.get('id') === this.get('UID')) return;
+        if (uid === this.get('UID')) return;
 
-        const channel = peer.get('channel');
+        const channel = peer.get(`channel.${uid}`);
+
+        if (!channel) {
+            this._queueMessage(uid, data, eventName);
+            return;
+        }
 
         if (message.length > 16384) {
             channel.send(
