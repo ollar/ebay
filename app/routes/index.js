@@ -9,7 +9,7 @@ export default Route.extend({
                 .then(products =>
                     products.filter(product => !product.get('sold'))
                 ),
-            blocks: this.get('store').findAll('block'),
+            blocks: this.get('store').findAll('block', { reload: true }),
             users: this.get('store').findAll('user'),
             bids: this.get('store').findAll('bid'),
         });

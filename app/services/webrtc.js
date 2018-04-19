@@ -230,9 +230,7 @@ export default Service.extend({
         return connection;
     },
 
-    createChannel({ uid: toUid, channelId }) {
-        channelId = channelId || toUid;
-
+    createChannel({ uid: toUid, channelId = 'main' }) {
         const peer = this.get('store').peekRecord('user', toUid);
         const channel = peer
             .get('connection')
@@ -327,7 +325,7 @@ export default Service.extend({
         if (!peer) return;
 
         let connection = peer.get('connection');
-        let channel = peer.get('channel');
+        let channel = peer.get('channel.main');
 
         if (channel) channel.close();
         if (connection) connection.close();
@@ -401,7 +399,7 @@ export default Service.extend({
 
         if (uid === this.get('UID')) return;
 
-        const channel = peer.get(`channel.${uid}`);
+        const channel = peer.get('channel.main');
 
         if (!channel) {
             this._queueMessage(uid, data, eventName);

@@ -8,7 +8,7 @@ import str from '../utils/str';
 
 export default DS.Model.extend({
     webrtc: service(),
-    index: DS.attr('number'),
+    index: DS.attr('number', { defaultValue: 1 }),
     timestamp: DS.attr('number'),
     entry: DS.attr(),
     entity: DS.attr('string'),
@@ -40,8 +40,6 @@ export default DS.Model.extend({
         if (prev) {
             this.set('index', prev.get('index') + 1);
             this.set('previousHash', prev.get('hash'));
-        } else {
-            this.set('index', 0);
         }
 
         this.set('hash', this.calculateHash());
