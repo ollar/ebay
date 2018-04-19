@@ -245,13 +245,6 @@ export default Service.extend({
 
         peer.set(`channel.${channelId}`, channel);
 
-        // if (channelId === toUid) {
-        //     peer.set('channel', channel);
-        // } else {
-        //     peer.set(channelId, channel);
-        // }
-        peer.save();
-
         // bind channel events
         this._bindChannelEvents(channel);
 
@@ -352,23 +345,10 @@ export default Service.extend({
         const channel = e.channel;
         channel.binaryType = 'arraybuffer';
 
-        console.log(channel);
-
         const peer = this.get('store').peekRecord('user', toUid);
         channel.toUid = toUid;
 
         peer.set(`channel.${channel.label}`, channel);
-
-        console.log(peer.get('channel.toUid'));
-
-        // if (peer.get('channel.label') !== channel.label) {
-        //     peer.set('channel', channel);
-        // } else {
-        //     console.log('me he');
-        //     peer.set(channel.label, channel);
-        // }
-
-        // peer.set('channel', channel);
 
         this._bindChannelEvents(channel);
     },
