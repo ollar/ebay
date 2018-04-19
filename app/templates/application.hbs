@@ -1,7 +1,10 @@
-{{site-header}}
+{{#site-drawer drawerData as |opened|}}
+    {{log opened}}
+    {{site-header}}
 
-<main id="main-content" class="main {{routeStyleNamespaceClassSet}}">
-    {{outlet}}
-</main>
+    <div id="content-wrapper" class="main {{routeStyleNamespaceClassSet}}">
+        {{outlet}}
+    </div>
 
-{{site-footer}}
+    {{site-footer}}
+{{/site-drawer}}

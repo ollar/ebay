@@ -7,6 +7,9 @@ export default Component.extend({
     router: service(),
 
     actions: {
+        toggleDrawer() {
+            this.sendAction('toggleDrawer');
+        },
         invalidateSession() {
             this.get('session')
                 .invalidate()

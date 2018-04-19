@@ -6,7 +6,6 @@ body {
 body > .ember-view {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
 }
 
 header,
@@ -27,4 +26,20 @@ footer {
     @include md() {
         padding: ms(3) ms(2);
     }
+}
+
+#drawer {
+    width: 300px;
+    flex-shrink: 0;
+    margin-left: -300px;
+    background-color: #fff;
+
+    &.opened {
+        transform: translate(100%, 0);
+    }
+}
+
+#main-content {
+    flex-shrink: 0;
+    width: 100%;
 }

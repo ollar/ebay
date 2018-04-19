@@ -1,0 +1,19 @@
+<aside id="drawer" class="{{if opened 'opened'}}">
+    <nav>
+        <ul class="menu">
+            <li class="leaf">
+                {{link-to (t 'links.home') 'index'}}
+            </li>
+            <li class="leaf">
+                {{link-to (t 'navigation.create_product') 'create-product'}}
+            </li>
+            <li class="leaf">
+                {{link-to (t 'navigation.orders') 'orders'}}
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+<main id="main-content">
+    {{yield (hash opened=opened)}}
+</main>
