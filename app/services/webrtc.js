@@ -58,15 +58,7 @@ function bindChannelEventsOnMessage(event) {
     try {
         message = JSON.parse(event.data);
     } catch (e) {
-        const messageChunks = this.get('messageChunks');
-        messageChunks.pushObject(event.data);
-        if (messageChunks.join('').length === this.get('long_message_length')) {
-            message = JSON.parse(messageChunks.join(''));
-            this.set('messageChunks', []);
-            this.set('long_message_length', '');
-        } else {
-            return;
-        }
+        trace(e);
     }
 
     switch (message.eventName) {
@@ -85,8 +77,6 @@ function bindChannelEventsOnMessage(event) {
                 .peekAll('block')
                 .sortBy('timestamp')
                 .getWithDefault('lastObject.index', 0);
-
-            // debugger;
 
             if (lastBlockIndex > message.data.index) {
                 var blocks = this.get('store')
@@ -140,8 +130,21 @@ function bindChannelEventsOnMessage(event) {
 
             break;
 
-        case 'message::long_message::length':
-            this.set('long_message_length', message.data.length);
+        case 'message::long_message::start':
+            this.set(`messageChunks.${event.target.label}`, []);
+            break;
+
+        case 'message::long_message::progress':
+            this.get(`messageChunks.${event.target.label}`).pushObject(
+                message.data
+            );
+            break;
+
+        case 'message::long_message::complete':
+            var _eventData = this.get(
+                `messageChunks.${event.target.label}`
+            ).join('');
+            bindChannelEventsOnMessage.call(this, { data: _eventData });
             break;
 
         default:
@@ -186,7 +189,7 @@ export default Service.extend({
 
     opened: computed(() => ({})),
     messageQueue: computed(() => ({})),
-    messageChunks: computed(() => []),
+    messageChunks: computed(() => ({})),
 
     me: computed.readOnly('session.data.authenticated'),
 
@@ -387,7 +390,6 @@ export default Service.extend({
     send(uid, data, eventName) {
         const peer = this.get('store').peekRecord('user', uid);
         const message = str({
-            type: 'message',
             data,
             eventName,
         });
@@ -407,15 +409,7 @@ export default Service.extend({
         }
 
         if (message.length > 16384) {
-            channel.send(
-                str({
-                    type: 'notification',
-                    eventName: 'message::long_message::length',
-                    data: { id: data.data.id, length: message.length },
-                })
-            );
-            return this.sendLongMessage(uid, data, message, eventName);
-            // return this.sendMessageChunked(uid, message);
+            return this.sendLongMessage(uid, message);
         }
 
         if (channel.readyState === 'open') {
@@ -439,12 +433,11 @@ export default Service.extend({
         next();
     },
 
-    _sendTransferPrepareInfo(next, channel, data) {
+    _sendTransferPrepareInfo(next, channel) {
         if (channel && channel.readyState === 'open') {
             channel.send(
                 str({
-                    type: '__dataDescription',
-                    data,
+                    eventName: 'message::long_message::start',
                 })
             );
         }
@@ -456,8 +449,7 @@ export default Service.extend({
         if (channel && channel.readyState === 'open') {
             channel.send(
                 str({
-                    type: '__dataTransferComplete',
-                    fromUid: this.get('UID'),
+                    eventName: 'message::long_message::complete',
                 })
             );
         }
@@ -465,19 +457,15 @@ export default Service.extend({
         return next(channel);
     },
 
-    sendLongMessage(uid, data, message, eventName) {
+    sendLongMessage(uid, message) {
         var middleware = new Middleware();
-
-        return;
 
         middleware.use(next => this._createDataChannel(uid, next));
         middleware.use((next, channel) =>
-            this._sendTransferPrepareInfo(next, channel, data)
+            this._sendTransferPrepareInfo(next, channel)
         );
         middleware.use((next, channel) => {
-            console.log('sending data', channel);
-
-            next(channel);
+            this.sendMessageChunked(channel, message, next);
         });
         middleware.use((next, channel) => {
             this._sendTransferCompleteInfo(next, channel);
@@ -488,23 +476,26 @@ export default Service.extend({
             this._closeDataChannels(next, channel);
         });
 
-        middleware.go(() => console.log(uid, data, eventName));
+        return middleware.go(() => trace('message sent'));
     },
 
-    sendMessageChunked(uid, message) {
-        const peer = this.get('store').peekRecord('user', uid);
-        const channel = peer.get('channel');
-
-        trace('sendMessageChunked', uid);
-
+    sendMessageChunked(channel, message, next) {
         if (channel.readyState !== 'open') return;
 
-        channel.send(message.slice(0, 16384));
+        channel.send(
+            str({
+                eventName: 'message::long_message::progress',
+                data: message.slice(0, 16384),
+            })
+        );
 
-        if (message.slice(16384).length > 16384)
+        if (message.length > 16384) {
             return run(() =>
-                this.sendMessageChunked(uid, message.slice(16384))
+                this.sendMessageChunked(channel, message.slice(16384), next)
             );
+        }
+
+        return next(channel);
     },
 
     broadcast(data, eventName) {
