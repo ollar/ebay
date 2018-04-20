@@ -12,8 +12,15 @@
             </li>
         </ul>
     </nav>
+    {{#if opened}}
+        <button {{action 'toggleDrawer'}}>
+            close
+        </button>
+    {{/if}}
 </aside>
 
+<div class="overlay {{if opened 'visible'}}" {{action 'toggleDrawer'}}></div>
+
 <main id="main-content">
-    {{yield (hash opened=opened)}}
+    {{yield (hash toggleDrawer=(action 'toggleDrawer'))}}
 </main>

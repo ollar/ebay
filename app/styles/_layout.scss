@@ -30,9 +30,12 @@ footer {
 
 #drawer {
     width: 300px;
-    flex-shrink: 0;
     margin-left: -300px;
+    flex-shrink: 0;
     background-color: #fff;
+    position: relative;
+    z-index: 10;
+    transform: translate(0, 0);
 
     &.opened {
         transform: translate(100%, 0);

@@ -6,8 +6,7 @@ export default Component.extend({
 
     actions: {
         toggleDrawer() {
-            console.log('toggleDrawer triggered');
-            // this.toggleProperty('opened');
+            this.toggleProperty('opened');
         },
     },
 });

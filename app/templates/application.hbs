@@ -1,6 +1,5 @@
-{{#site-drawer drawerData as |opened|}}
-    {{log opened}}
-    {{site-header}}
+{{#site-drawer drawerData as |drawerData|}}
+    {{site-header drawerData=drawerData}}
 
     <div id="content-wrapper" class="main {{routeStyleNamespaceClassSet}}">
         {{outlet}}

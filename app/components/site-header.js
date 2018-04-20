@@ -8,7 +8,7 @@ export default Component.extend({
 
     actions: {
         toggleDrawer() {
-            this.sendAction('toggleDrawer');
+            this.get('drawerData.toggleDrawer')();
         },
         invalidateSession() {
             this.get('session')

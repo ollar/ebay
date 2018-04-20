@@ -29,7 +29,7 @@ footer {
     border-width: 1px 0 0;
 }
 
-a {
+a:not(.button) {
     color: map-get($colours, red);
     text-decoration: none;
 
@@ -49,6 +49,14 @@ h6 {
     &.title {
         margin-bottom: 1.2em;
     }
+}
+
+#drawer, #main-content {
+    background-color: map-get($colours, white);;
+}
+
+#drawer {
+    transition: transform 0.3s;
 }
 
 .img {
