@@ -18,6 +18,16 @@ footer {
     }
 }
 
+header {
+    nav {
+        display: none;
+
+        @include sm() {
+            display: block;
+        }
+    }
+}
+
 .main {
     flex-grow: 2;
     padding: ms(2) ms(1);
@@ -25,6 +35,12 @@ footer {
 
     @include md() {
         padding: ms(3) ms(2);
+    }
+}
+
+.drawer-toggle-button {
+    @include sm() {
+        display: none;
     }
 }
 

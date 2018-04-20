@@ -1,6 +1,6 @@
 {{#if session.isAuthenticated}}
-    <button {{action 'toggleDrawer'}}>
-        aaa
+    <button class="drawer-toggle-button" {{action 'toggleDrawer'}}>
+        {{icons/icon-menu size=30}}
     </button>
     <nav>
         {{link-to (t 'links.home') 'index'}}
