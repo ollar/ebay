@@ -19,7 +19,7 @@
     {{/if}}
 </aside>
 
-<div class="overlay {{if opened 'visible'}}" {{action 'toggleDrawer'}}></div>
+<div id="drawer__overlay" class="{{if opened 'visible'}}" {{action 'toggleDrawer'}}></div>
 
 <main id="main-content">
     {{yield (hash toggleDrawer=(action 'toggleDrawer'))}}
