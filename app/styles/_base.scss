@@ -57,8 +57,12 @@ h6 {
 }
 
 .icon-button {
-    padding: 0;
+    padding: ms(-2);
     background: none;
+
+    svg {
+        display: block;
+    }
 
     &:hover,
     &:active {
