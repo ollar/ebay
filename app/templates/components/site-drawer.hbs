@@ -1,4 +1,11 @@
 <aside id="drawer" class="{{if opened 'opened'}}">
+    <header>
+        {{#if opened}}
+            <button {{action 'toggleDrawer'}} class="drawer-toggle-button icon-button">
+                {{icons/icon-close size=30}}
+            </button>
+        {{/if}}
+    </header>
     <nav>
         <ul class="menu">
             <li class="leaf">
@@ -12,11 +19,6 @@
             </li>
         </ul>
     </nav>
-    {{#if opened}}
-        <button {{action 'toggleDrawer'}}>
-            close
-        </button>
-    {{/if}}
 </aside>
 
 <div id="drawer__overlay" class="{{if opened 'visible'}}" {{action 'toggleDrawer'}}></div>
