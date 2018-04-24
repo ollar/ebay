@@ -3,7 +3,7 @@ import { computed } from '@ember/object';
 
 export default DS.Model.extend({
     username: DS.attr('string'),
-    image: DS.attr('string'),
+    images: DS.hasMany('image'),
 
     connection: computed(() => ({})),
     channel: computed(() => ({})),

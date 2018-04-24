@@ -1,10 +1,10 @@
-export default function imageResize(image) {
+export default function imageResize(image, {maxWidth=800, maxHeight=600}) {
     const promise = new Promise((yea, nah) => {
         var img = new Image();
         var imageUrl = URL.createObjectURL(image);
 
-        const IMG_MAX_WIDTH = 800;
-        const IMG_MAX_HEIGHT = 600;
+        const IMG_MAX_WIDTH = maxWidth;
+        const IMG_MAX_HEIGHT = maxHeight;
 
         if (image.type.indexOf('image') < 0) {
             return nah();

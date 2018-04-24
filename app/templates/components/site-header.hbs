@@ -12,7 +12,8 @@
 
     {{yield}}
 
-    <button {{action 'invalidateSession'}} class="logout-button">
-        {{t 'navigation.logout'}}
+
+    <button {{action 'invalidateSession'}} class="logout-button icon-button">
+        {{icon-image data=me _size=30}}
     </button>
 {{/if}}

@@ -3,8 +3,8 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 
 export default Component.extend({
-    init(options) {
-        this._super(options);
+    init() {
+        this._super(...arguments);
 
         this.colours = [
             '#b71c1c',
@@ -21,19 +21,15 @@ export default Component.extend({
     },
 
     classNames: ['icon-image'],
-    classNameBindings: ['imageUrl:has-image'],
+    classNameBindings: ['data.image:has-image'],
 
-    name: computed('data.{displayName,name}', function() {
-        if (Object.keys(this.get('data')).length === 0) return '';
-        return (
-            this.get('data').displayName ||
-            (this.get('data').get && this.get('data').get('name')) ||
-            'anonymous'
-        );
+    name: computed('data.username', function() {
+        return this.getWithDefault('data.username', 'anonymous');
     }),
 
+    image: computed.readOnly('data.images.firstObject'),
+
     initials: computed('name', function() {
-        if (!this.get('name')) return '';
         return this.get('name')
             .trim()
             .split(' ')
@@ -62,8 +58,8 @@ export default Component.extend({
             height: this._size,
             width: this._size,
             lineHeight: this._size + 'px',
-            backgroundImage: this.get('data.imageUrl')
-                ? `url(${this.get('data.imageUrl')})`
+            backgroundImage: this.get('image')
+                ? `url(${this.get('image.base64')})`
                 : null,
         });
     },

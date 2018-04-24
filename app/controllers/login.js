@@ -14,7 +14,7 @@ export default Controller.extend({
             const file = files[0];
             if (!file.type.match(/(png|jpg|jpeg)/gi)) return;
 
-            imageResize(file).then(image => {
+            imageResize(file, {maxWidth: 96, maxHeight: 96}).then(image => {
                 const userImage = this.get('store').createRecord('image');
 
                 userImage.setProperties({
@@ -39,7 +39,7 @@ export default Controller.extend({
             this.get('session')
                 .authenticate('authenticator:local', {
                     username: this.get('username'),
-                    image: this.get('imageId'),
+                    imageId: this.get('imageId'),
                 })
                 .then(() => {
                     this.transitionToRoute('index');

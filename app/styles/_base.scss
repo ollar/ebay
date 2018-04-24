@@ -68,5 +68,18 @@ h6 {
     &:active {
         background: none;
         border: none;
+        box-shadow: none;
+    }
+}
+
+.icon-image {
+    border-radius: 50%;
+    text-align: center;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center center;
+
+    span {
+        color: #fff;
     }
 }
