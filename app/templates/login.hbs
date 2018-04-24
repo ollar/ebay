@@ -3,13 +3,18 @@
 </h1>
 
 <form {{action "submit" on="submit"}} class="aligned">
-    {{#if image}}
-        <div class="form-line">
-            <img class="img" src={{image.base64}} width={{image.width}} height={{image.height}}>
-        </div>
-    {{else}}
-        {{images-drop-area uploadImage=(action 'uploadImage') class="form-line"}}
-    {{/if}}
+    <div class="form-line upload-avatar">
+        {{#if image}}
+            <div class="image-wrapper">
+                <img class="img" src={{image.base64}}>
+            </div>
+        {{else}}
+            {{images-drop-area
+                uploadImage=(action 'uploadImage')
+                title=(t 'login.form.avatar.label')
+            }}
+        {{/if}}
+    </div>
 
     <div class="form-line">
         <label for="username">{{t 'login.form.username.label'}}</label>

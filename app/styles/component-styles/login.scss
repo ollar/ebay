@@ -1,0 +1,18 @@
+.upload-avatar {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-wrapper {
+    height: 96px;
+    width: 96px;
+    border-radius: 100%;
+    overflow: hidden;
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+}

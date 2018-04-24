@@ -58,9 +58,6 @@ export default Component.extend({
             height: this._size,
             width: this._size,
             lineHeight: this._size + 'px',
-            backgroundImage: this.get('image')
-                ? `url(${this.get('image.base64')})`
-                : null,
         });
     },
 
