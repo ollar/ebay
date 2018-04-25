@@ -10,7 +10,7 @@ export default Component.extend({
 
     me: computed('session.isAuthenticated', function() {
         const id = this.getWithDefault('session.data.authenticated.modelId', '');
-        return this.get('store').peekRecord('me', id);
+        return this.get('store').peekRecord('user', id);
     }),
 
     actions: {

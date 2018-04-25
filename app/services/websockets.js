@@ -40,8 +40,8 @@ export default Service.extend({
             str({
                 type: 'enterRoom',
                 uid: this.get('authenticated.id'),
-                username: this.get('authenticated.username'),
-                image: this.get('authenticated.image'),
+                // username: this.get('authenticated.username'),
+                // image: this.get('authenticated.image'),
             })
         );
     },

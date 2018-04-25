@@ -17,14 +17,22 @@ export default Base.extend({
             new Fingerprint2().get(result => {
                 this.get('websockets').connect();
                 args.id = result;
+
+                const me = this.get('store').peekRecord('user', args.modelId);
+                me.set('fingerprint', result);
+                me.set('isMe', true);
+                me.save();
+
                 res(args);
             });
         });
     },
 
     invalidate(data) {
-        this.get('store').peekRecord('me', data.modelId).destroyRecord();
-        if (data.imageId) this.get('store').peekRecord('image', data.imageId).destroyRecord();
+        const me = this.get('store').peekRecord('user', data.modelId)
+        me.get('images').forEach(image => image.destroyRecord());
+        me.destroyRecord();
+
         this.get('websockets').disconnect();
         return Promise.resolve();
     },
