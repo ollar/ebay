@@ -4,7 +4,7 @@
 
 <form {{action "submit" on="submit"}} class="aligned">
     <div class="form-line upload-avatar">
-        {{#if image}}
+        {{#each model.images as |image|}}
             <div class="image-wrapper">
                 <img class="img" src={{image.base64}}>
             </div>
@@ -13,12 +13,12 @@
                 uploadImage=(action 'uploadImage')
                 title=(t 'login.form.avatar.label')
             }}
-        {{/if}}
+        {{/each}}
     </div>
 
     <div class="form-line">
         <label for="username">{{t 'login.form.username.label'}}</label>
-        {{input name="username" value=username}}
+        {{input name="username" value=model.username}}
     </div>
 
     <div class="buttons-wrapper">

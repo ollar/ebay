@@ -4,8 +4,6 @@ import { inject as service } from '@ember/service';
 import imageResize from '../utils/image-resize';
 
 export default Controller.extend({
-    username: '',
-    userImage: null,
     imageId: null,
     session: service(),
 
@@ -15,31 +13,21 @@ export default Controller.extend({
             if (!file.type.match(/(png|jpg|jpeg)/gi)) return;
 
             imageResize(file, {maxWidth: 96, maxHeight: 96}).then(image => {
-                const userImage = this.get('store').createRecord('image');
+                const userImage = this.get('store').createRecord('image', image);
 
-                userImage.setProperties({
-                    base64: image.base64,
-                    type: image.type,
-                    name: image.name,
-                    size: image.size,
-                    width: image.width,
-                    height: image.height,
-                    lastModified: image.lastModified,
-                });
-
-                this.set('image', userImage);
+                this.get('model.images').pushObject(userImage);
                 this.set('imageId', userImage.id);
             });
         },
         submit() {
-            if (!this.get('username')) return;
+            if (!this.get('model.username')) return;
 
-            if (this.get('image')) this.get('image').save();
+            this.get('model.images').forEach(image => image.save());
+            this.get('model').save();
 
             this.get('session')
                 .authenticate('authenticator:local', {
-                    username: this.get('username'),
-                    imageId: this.get('imageId'),
+                    modelId: this.get('model.id'),
                 })
                 .then(() => {
                     this.transitionToRoute('index');

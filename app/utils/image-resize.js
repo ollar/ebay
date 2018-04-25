@@ -1,4 +1,7 @@
-export default function imageResize(image, {maxWidth=800, maxHeight=600}) {
+export default function imageResize(
+    image,
+    { maxWidth = 800, maxHeight = 600 }
+) {
     const promise = new Promise((yea, nah) => {
         var img = new Image();
         var imageUrl = URL.createObjectURL(image);
@@ -32,45 +35,15 @@ export default function imageResize(image, {maxWidth=800, maxHeight=600}) {
 
             octx.drawImage(img, 0, 0, oc.width, oc.height);
 
-            return oc.toBlob(
-                blob => {
-                    Object.defineProperties(blob, {
-                        type: {
-                            value: image.type,
-                            writable: true,
-                        },
-                        name: {
-                            writable: true,
-                            value: image.name,
-                        },
-                        lastModified: {
-                            writable: true,
-                            value: image.lastModified,
-                        },
-                        lastModifiedDate: {
-                            writable: true,
-                            value: image.lastModifiedDate,
-                        },
-                        width: {
-                            writable: false,
-                            value: image_width,
-                        },
-                        height: {
-                            writable: false,
-                            value: image_height,
-                        },
-                        base64: {
-                            writable: true,
-                            value: oc.toDataURL(),
-                        },
-                    });
-
-                    return yea(blob);
-                },
-                {
-                    type: image.type,
-                }
-            );
+            return yea({
+                type: image.type,
+                name: image.name,
+                lastModified: image.lastModified,
+                lastModifiedDate: image.lastModifiedDate,
+                width: image_width,
+                height: image_height,
+                base64: oc.toDataURL(),
+            });
         };
 
         img.src = imageUrl;
