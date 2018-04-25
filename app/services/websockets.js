@@ -39,7 +39,7 @@ export default Service.extend({
         this.get('socket').send(
             str({
                 type: 'enterRoom',
-                uid: this.get('authenticated.id'),
+                uid: this.get('authenticated.modelId'),
                 // username: this.get('authenticated.username'),
                 // image: this.get('authenticated.image'),
             })

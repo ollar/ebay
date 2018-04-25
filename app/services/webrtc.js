@@ -175,6 +175,8 @@ function onSendChannelStateChangeHandler(channel) {
             }
         );
         this.set(`messageQueue.${channel.toUid}`, []);
+
+        run(() => this.send(channel.toUid, { entity: 'user', id: channel.toUid }, 'entity::request_data'));
     } else {
         this.set(`opened.${channel.toUid}`, false);
     }
@@ -193,7 +195,7 @@ export default Service.extend({
 
     me: computed.readOnly('session.data.authenticated'),
 
-    UID: computed.readOnly('me.id'),
+    UID: computed.readOnly('me.modelId'),
 
     ws: computed.readOnly('websockets.socket'),
 

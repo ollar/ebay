@@ -69,17 +69,13 @@ class WS_Handler:
                 await self.sendData(key, path, {
                     'type': 'newUser',
                     'uid': myuid,
-                    'username': data.get('username'),
-                    'image': data.get('image'),
                 })
 
     async def _on_offer(self, data, path):
         await self.sendData(data.get('toUid'), path, {
             'type': 'offerFrom',
             'fromUid': data.get('fromUid'),
-            'username': data.get('username'),
             'offer': data.get('offer'),
-            'image': data.get('image'),
         })
 
     async def _on_answer(self, data, path):
