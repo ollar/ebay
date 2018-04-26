@@ -1,5 +1,7 @@
 import LSAdapter from 'ember-localstorage-adapter';
 
+import localforage from 'npm:localforage';
+
 import { inject as service } from '@ember/service';
 import { resolve, all } from 'rsvp';
 import { A } from '@ember/array';
@@ -8,6 +10,7 @@ import trace from '../utils/trace';
 export default LSAdapter.extend({
     namespace: 'ebay',
     webrtc: service(),
+    _localStorage: localforage,
 
     requestData(entity, id) {
         this.get('webrtc').broadcast({ entity, id }, 'entity::request_data');
