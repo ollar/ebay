@@ -332,8 +332,8 @@ export default Service.extend({
         let connection = peer.get('connection');
         let channel = peer.get('channel.main');
 
-        if (channel) channel.close();
-        if (connection) connection.close();
+        if (channel && channel.close) channel.close();
+        if (connection && connection.close) connection.close();
 
         peer.unloadRecord();
         // if (peers.length === 0) Sync.trigger('channelClose');
@@ -411,7 +411,7 @@ export default Service.extend({
         }
 
         if (message.length > 16384) {
-            return this.sendLongMessage(uid, message);
+            return this.sendLongMessage(uid, message, data);
         }
 
         if (channel.readyState === 'open') {
@@ -419,10 +419,10 @@ export default Service.extend({
         }
     },
 
-    _createDataChannel(uid, next) {
+    _createDataChannel(uid, data, next) {
         var channel = this.createChannel({
             uid,
-            channelId: uid + '_channel_data',
+            channelId: `${data.entity}::${data.data.id}_channel_data`,
         });
 
         channel.addEventListener('open', function() {
@@ -459,10 +459,10 @@ export default Service.extend({
         return next(channel);
     },
 
-    sendLongMessage(uid, message) {
+    sendLongMessage(uid, message, data) {
         var middleware = new Middleware();
 
-        middleware.use(next => this._createDataChannel(uid, next));
+        middleware.use(next => this._createDataChannel(uid, data, next));
         middleware.use((next, channel) =>
             this._sendTransferPrepareInfo(next, channel)
         );

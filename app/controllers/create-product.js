@@ -10,17 +10,7 @@ export default Controller.extend({
                 if (!file.type.match(/(png|jpg|jpeg)/gi)) return;
 
                 imageResize(file).then(image => {
-                    const _image = this.get('store').createRecord('image');
-
-                    _image.setProperties({
-                        base64: image.base64,
-                        type: image.type,
-                        name: image.name,
-                        size: image.size,
-                        width: image.width,
-                        height: image.height,
-                        lastModified: image.lastModified,
-                    });
+                    const _image = this.get('store').createRecord('image', image);
 
                     this.get('model.images').addObject(_image);
                 });

@@ -4,7 +4,7 @@ import { inject as service } from '@ember/service';
 
 export default Controller.extend({
     session: service(),
-    // bidPrice: computed('model.product.price', function() {
+    myId: computed.readOnly('session.data.authenticated.id'),
     bidPrice: computed('model.product.price', {
         get() {
             return (
@@ -35,7 +35,7 @@ export default Controller.extend({
                 product: product,
                 price: this.get('bidPrice'),
                 timestamp: Date.now(),
-                author: this.get('session.data.authenticated.id'),
+                author: this.get('myId'),
             });
 
             product.set('price', bid.get('price'));
