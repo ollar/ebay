@@ -16,7 +16,7 @@ export default DS.Adapter.extend({
     _getModelDb(modelName) {
         if (!this.get(`__databases.${modelName}`)) {
             const db = this.__storage().createInstance({
-                name: `${this._adapterNamespace()}::${modelName}`,
+                name: `${this._adapterNamespace()}__${modelName}`,
             });
 
             this.set(`__databases.${modelName}`, db);
@@ -28,46 +28,30 @@ export default DS.Adapter.extend({
         return this.get('namespace');
     },
 
-    _getNamespaceData(type) {
-        return this.__storage()
-            .getItem(`${this._adapterNamespace()}::${type}`)
-            .then(storage => storage || {})
-            .catch(() => ({}));
-    },
-
     _modelNamespace(type) {
         return type.modelName;
     },
 
-    findRecord(store, model, id, snapshot) {
-        const _modelName = this._modelNamespace(model);
-
-        return this.__storage()
-            .getItem(`${this._adapterNamespace()}::${_modelName}`)
-            .then(_data => _data[id]);
-    },
-    createRecord(store, model, snapshot) {
-        let data = this.serialize(snapshot, { includeId: true });
-        const _modelName = this._modelNamespace(model);
-
-        const db = this._getModelDb(_modelName);
+    findRecord() {},
+    createRecord(store, type, snapshot) {
+        const db = this._getModelDb(this._modelNamespace(type));
+        const data = snapshot.serialize({ includeId: true });
 
         return db.setItem(data.id, data);
+
     },
     updateRecord() {},
-    deleteRecord() {},
-    findAll(store, model) {
-        const _modelName = this._modelNamespace(model);
+    deleteRecord(store, type, snapshot) {
+        const db = this._getModelDb(this._modelNamespace(type));
+        const data = snapshot.serialize({ includeId: true });
 
-        const db = this._getModelDb(_modelName);
-
-        all([db.iterate()]).then(val => console.log(val));
-
-        return [];
-
-        // return this._getNamespaceData(_modelName).then(data =>
-        //     Object.values(data)
-        // );
+        return db.removeItem(data.id);
+    },
+    findAll(store, type, sinceToken, snapshotRecordArray) {
+        const db = this._getModelDb(this._modelNamespace(type));
+        return db
+            .keys()
+            .then(keys => all(keys.map(key => db.getItem(key))));
     },
     query() {},
 });
