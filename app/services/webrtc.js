@@ -110,7 +110,7 @@ function bindChannelEventsOnMessage(event) {
 
         case 'entity::request_data':
             this.get('store')
-                .findRecord(message.data.entity, message.data.id, {
+                .findRecord(message.data.entity, message.data.id, null, {
                     quite: true,
                 })
                 .then(entity => {
@@ -176,7 +176,13 @@ function onSendChannelStateChangeHandler(channel) {
         );
         this.set(`messageQueue.${channel.toUid}`, []);
 
-        run(() => this.send(channel.toUid, { entity: 'user', id: channel.toUid }, 'entity::request_data'));
+        run(() =>
+            this.send(
+                channel.toUid,
+                { entity: 'user', id: channel.toUid },
+                'entity::request_data'
+            )
+        );
     } else {
         this.set(`opened.${channel.toUid}`, false);
     }
