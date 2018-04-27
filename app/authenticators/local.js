@@ -29,9 +29,15 @@ export default Base.extend({
     },
 
     invalidate(data) {
-        const me = this.get('store').peekRecord('user', data.modelId)
-        me.get('images').forEach(image => image.destroyRecord());
-        me.destroyRecord();
+        const me = this.get('store').peekRecord('user', data.modelId);
+
+        if (me) {
+            me.get('images').forEach(image => image.destroyRecord());
+            me.destroyRecord();
+        } else {
+            const users = this.get('store').peekAll('user');
+            users.forEach(user => user.destroyRecord());
+        }
 
         this.get('websockets').disconnect();
         return Promise.resolve();

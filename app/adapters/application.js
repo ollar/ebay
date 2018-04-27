@@ -1,60 +1,73 @@
-import LSAdapter from 'ember-localstorage-adapter';
+import DS from 'ember-data';
 
 import localforage from 'npm:localforage';
-
-import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
 import { resolve, all } from 'rsvp';
-import { A } from '@ember/array';
-import trace from '../utils/trace';
+import { run } from '@ember/runloop';
 
-export default LSAdapter.extend({
+export default DS.Adapter.extend({
     namespace: 'ebay',
-    webrtc: service(),
-    _localStorage: localforage,
+    __databases: computed(() => ({})),
 
-    requestData(entity, id) {
-        this.get('webrtc').broadcast({ entity, id }, 'entity::request_data');
+    __storage() {
+        return localforage;
     },
 
-    notFoundRecordError(modelName, id) {
-        return `Couldn't find record of type '${modelName}' for the id '${id}'.`;
-    },
+    _getModelDb(modelName) {
+        if (!this.get(`__databases.${modelName}`)) {
+            const db = this.__storage().createInstance({
+                name: `${this._adapterNamespace()}::${modelName}`,
+            });
 
-    findRecord: function findRecord(store, type, id, opts) {
-        var allowRecursive = true;
-        var namespace = this._namespaceForType(type);
-        var record = A(namespace.records[id]);
-        var _checkRecord = [];
-
-        if (opts && typeof opts.allowRecursive !== 'undefined') {
-            allowRecursive = opts.allowRecursive;
+            this.set(`__databases.${modelName}`, db);
         }
-
-        Object.keys(record).forEach(key => {
-            if (key !== 'id' && record[key] !== null)
-                _checkRecord.push(record[key]);
-        });
-
-        if (
-            !record ||
-            !record.hasOwnProperty('id') ||
-            _checkRecord.length === 0
-        ) {
-            trace(this.notFoundRecordError(type.modelName, id));
-            if (!opts.quite) {
-                this.requestData(type.modelName, id);
-            }
-            record = { id };
-        }
-
-        if (allowRecursive) {
-            return this.loadRelationships(store, type, record);
-        } else {
-            return resolve(record);
-        }
+        return this.get(`__databases.${modelName}`);
     },
 
-    findMany: function findMany(store, type, ids, opts) {
-        return all(ids.map(id => this.findRecord(store, type, id, opts)));
+    _adapterNamespace() {
+        return this.get('namespace');
     },
+
+    _getNamespaceData(type) {
+        return this.__storage()
+            .getItem(`${this._adapterNamespace()}::${type}`)
+            .then(storage => storage || {})
+            .catch(() => ({}));
+    },
+
+    _modelNamespace(type) {
+        return type.modelName;
+    },
+
+    findRecord(store, model, id, snapshot) {
+        const _modelName = this._modelNamespace(model);
+
+        return this.__storage()
+            .getItem(`${this._adapterNamespace()}::${_modelName}`)
+            .then(_data => _data[id]);
+    },
+    createRecord(store, model, snapshot) {
+        let data = this.serialize(snapshot, { includeId: true });
+        const _modelName = this._modelNamespace(model);
+
+        const db = this._getModelDb(_modelName);
+
+        return db.setItem(data.id, data);
+    },
+    updateRecord() {},
+    deleteRecord() {},
+    findAll(store, model) {
+        const _modelName = this._modelNamespace(model);
+
+        const db = this._getModelDb(_modelName);
+
+        all([db.iterate()]).then(val => console.log(val));
+
+        return [];
+
+        // return this._getNamespaceData(_modelName).then(data =>
+        //     Object.values(data)
+        // );
+    },
+    query() {},
 });
