@@ -32,18 +32,39 @@ export default DS.Adapter.extend({
         return type.modelName;
     },
 
+    _notFoundRecordError(modelName, id) {
+        return `Couldn't find record of type '${modelName}' for the id '${id}'.`;
+    },
+
+    _requestData(entity, id) {
+        this.get('webrtc').broadcast({ entity, id }, 'entity::request_data');
+    },
+
     findRecord(store, type, id, snapshot) {
         const db = this._getModelDb(this._modelNamespace(type));
 
         // check if item no found
-        return db.getItem(id);
+        return db
+            .getItem(id)
+            .then(record => {
+                console.log(record);
+                if (!record) {
+                    trace(this.notFoundRecordError(type.modelName, id));
+                    if (!opts.quite) {
+                        this._requestData(type.modelName, id);
+                    }
+                    record = { id };
+                }
+
+                return record;
+            })
+            .catch(e => trace(e));
     },
     createRecord(store, type, snapshot) {
         const db = this._getModelDb(this._modelNamespace(type));
         const data = snapshot.serialize({ includeId: true });
 
         return db.setItem(data.id, data);
-
     },
     updateRecord() {},
     deleteRecord(store, type, snapshot) {
@@ -56,7 +77,9 @@ export default DS.Adapter.extend({
         const db = this._getModelDb(this._modelNamespace(type));
         return db
             .keys()
-            .then(keys => all(keys.map(key => this.findRecord(store, type, key, null))));
+            .then(keys =>
+                all(keys.map(key => this.findRecord(store, type, key, null)))
+            );
     },
     query() {},
 });
