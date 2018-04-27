@@ -32,7 +32,12 @@ export default DS.Adapter.extend({
         return type.modelName;
     },
 
-    findRecord() {},
+    findRecord(store, type, id, snapshot) {
+        const db = this._getModelDb(this._modelNamespace(type));
+
+        // check if item no found
+        return db.getItem(id);
+    },
     createRecord(store, type, snapshot) {
         const db = this._getModelDb(this._modelNamespace(type));
         const data = snapshot.serialize({ includeId: true });
@@ -51,7 +56,7 @@ export default DS.Adapter.extend({
         const db = this._getModelDb(this._modelNamespace(type));
         return db
             .keys()
-            .then(keys => all(keys.map(key => db.getItem(key))));
+            .then(keys => all(keys.map(key => this.findRecord(store, type, key, null))));
     },
     query() {},
 });
