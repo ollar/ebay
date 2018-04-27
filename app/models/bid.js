@@ -7,5 +7,5 @@ export default DS.Model.extend(WriteBlockMixin, {
     product: DS.belongsTo('product'),
     author: DS.attr('string'),
     price: DS.attr(),
-    timestamp: DS.attr('string'),
+    timestamp: DS.attr('number'),
 });

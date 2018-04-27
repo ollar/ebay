@@ -30,7 +30,8 @@ export default {
   },
 
   footer: {
-    footer_text: 'Made with \u2764 SPB 2018',
+    // footer_text: 'Made with \u2764 SPB 2018',
+    footer_text: 'Made SPB 2018',
   },
 
   login: {

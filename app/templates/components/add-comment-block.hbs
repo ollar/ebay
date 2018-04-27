@@ -1,0 +1,27 @@
+<h3 class="title">
+    {{t 'add_comment.title'}}
+</h3>
+
+<form {{action 'createComment' on="submit"}}>
+    <div class="form-line">
+        <label for="title">{{t 'create_product.form.title.label'}}</label>
+        {{input id="title" value=model.title}}
+    </div>
+
+    <div class="form-line">
+        <label for="body">{{t 'create_product.form.body.label'}}</label>
+        {{textarea id="body" value=model.body}}
+    </div>
+
+    <div class="buttons-wrapper">
+        <button type="submit">
+            {{t 'buttons.submit'}}
+        </button>
+
+        <button type="button">
+            {{t 'buttons.cancel'}}
+        </button>
+    </div>
+</form>
+
+{{yield}}

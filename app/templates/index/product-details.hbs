@@ -1,7 +1,11 @@
 <div class="container product-details">
     <div class="back-button">
-        <button {{action 'goBack'}}>
-            {{t 'product_details.buttons.goBack'}}
+        <button
+            {{action 'goBack'}}
+            class="icon-button"
+            title={{t 'product_details.buttons.goBack'}}
+        >
+            {{icons/icon-back size=24}}
         </button>
     </div>
     <h1 class="title">
@@ -46,6 +50,18 @@
             {{t 'product_details.sold_message'}}
         </h3>
     {{/unless}}
+
+    <div class="comments">
+        {{#each model.comments as |comment|}}
+            {{comment.title}}
+            {{comment.body}}
+        {{else}}
+            {{t 'product_details.no_comments'}}
+        {{/each}}
+    </div>
+
+
+    {{add-comment-block product=model}}
 
     {{outlet}}
 </div>
