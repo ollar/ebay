@@ -26,8 +26,14 @@ export default Component.extend({
                 .get('comments')
                 .pushObject(this.get('model'));
 
-            this.get('product').save();
             this.get('model').save();
+            this.set('model', this.get('store').createRecord('comment'));
+            this.toggleAddComment();
         },
+
+        cancelCommenting() {
+            this.get('model').setProperties({});
+            this.toggleAddComment();
+        }
     },
 });

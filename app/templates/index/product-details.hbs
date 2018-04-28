@@ -52,16 +52,20 @@
     {{/unless}}
 
     <div class="comments">
+        <h3>{{t 'product_details.comments_title'}}</h3>
         {{#each model.comments as |comment|}}
-            {{comment.title}}
-            {{comment.body}}
+            {{comment-list-block comment=comment}}
         {{else}}
             {{t 'product_details.no_comments'}}
         {{/each}}
     </div>
 
 
-    {{add-comment-block product=model}}
+    {{#if showAddCommentBlock}}
+        {{add-comment-block product=model toggleAddComment=(action 'toggleAddComment')}}
+    {{else}}
+        <button {{action 'toggleAddComment'}}>{{t 'product_details.add_comment_button'}}</button>
+    {{/if}}
 
     {{outlet}}
 </div>

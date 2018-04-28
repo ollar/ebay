@@ -1,6 +1,7 @@
 import DS from 'ember-data';
 
 import WriteBlockMixin from '../mixins/write-block';
+import { computed } from '@ember/object';
 
 export default DS.Model.extend(WriteBlockMixin, {
     title: DS.attr('string'),
@@ -10,11 +11,12 @@ export default DS.Model.extend(WriteBlockMixin, {
     author: DS.attr('string'),
 
     images: DS.hasMany(),
-    comments: DS.hasMany(),
 
     sold: DS.attr('boolean', { defaultValue: false }),
 
     bids: DS.hasMany('bid'),
     bidStep: DS.attr('number'),
     timestamp: DS.attr('number'),
+
+    comments: computed(() => ([])),
 });

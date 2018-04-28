@@ -69,6 +69,13 @@ export default DS.Adapter.extend({
         const db = this._getModelDb(this._modelNamespace(type));
         const data = snapshot.serialize();
 
+        if (snapshot.record._broadcastOnSave) {
+            this.get('webrtc').broadcast(
+                {data, entity: snapshot.modelName},
+                'entity::create'
+            );
+        }
+
         return db.setItem(data.id, data);
     },
     updateRecord(store, type, snapshot) {

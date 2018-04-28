@@ -4,12 +4,12 @@
 
 <form {{action 'createComment' on="submit"}}>
     <div class="form-line">
-        <label for="title">{{t 'create_product.form.title.label'}}</label>
+        <label for="title">{{t 'add_comment.form.title.label'}}</label>
         {{input id="title" value=model.title}}
     </div>
 
     <div class="form-line">
-        <label for="body">{{t 'create_product.form.body.label'}}</label>
+        <label for="body">{{t 'add_comment.form.body.label'}}</label>
         {{textarea id="body" value=model.body}}
     </div>
 
@@ -18,7 +18,7 @@
             {{t 'buttons.submit'}}
         </button>
 
-        <button type="button">
+        <button type="button" {{action 'cancelCommenting'}}>
             {{t 'buttons.cancel'}}
         </button>
     </div>

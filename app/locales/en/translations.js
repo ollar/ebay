@@ -50,8 +50,13 @@ export default {
       goBack: 'Back',
     },
 
+    comments_title: 'Comments',
+    no_comments: 'No comments',
+
     last_bidder: 'Last bidder - {{bidder.username}}',
     sold_message: 'This item is sold',
+
+    add_comment_button: 'Add your comment',
   },
 
   bid: {
@@ -85,6 +90,18 @@ export default {
         label: 'Bid Step',
       },
     },
+  },
+
+  add_comment: {
+    title: 'Add your comment',
+    form: {
+      title: {
+        label: 'Title',
+      },
+      body: {
+        label: 'Body'
+      }
+    }
   },
 
   order_block: {

@@ -1,6 +1,8 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
+    _broadcastOnSave: true,
+
     base64: DS.attr('string'),
     type: DS.attr('string'),
     name: DS.attr('string'),

@@ -8,6 +8,8 @@ export default Controller.extend({
     bidsNumber: computed.readOnly('model.bids.length'),
     lastBid: computed.readOnly('model.bids.lastObject'),
 
+    showAddCommentBlock: false,
+
     lastBidUser: computed('lastBid', function() {
         const userId = this.get('lastBid.author');
         return this.get('store').peekRecord('user', userId);
@@ -18,6 +20,9 @@ export default Controller.extend({
     }),
 
     actions: {
+        toggleAddComment() {
+            this.toggleProperty('showAddCommentBlock');
+        },
         goBack() {
             window.history.back();
         },

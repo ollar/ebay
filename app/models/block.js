@@ -1,19 +1,19 @@
 import DS from 'ember-data';
 import CryptoJS from 'cryptojs';
 
-import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 
 import str from '../utils/str';
 
 export default DS.Model.extend({
-    webrtc: service(),
     index: DS.attr('number', { defaultValue: 1 }),
     timestamp: DS.attr('number'),
     entry: DS.attr(),
     entity: DS.attr('string'),
     hash: DS.attr('string'),
     previousHash: DS.attr('string', { defaultValue: '' }),
+
+    _broadcastOnSave: true,
 
     latestBlock: computed(function() {
         return this.get('store')
@@ -44,10 +44,6 @@ export default DS.Model.extend({
 
         this.set('hash', this.calculateHash());
 
-        this.get('webrtc').broadcast(
-            this.serialize({ includeId: true }),
-            'block::create'
-        );
         return this._super(options);
     },
 
