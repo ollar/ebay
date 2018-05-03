@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 
 import { run, schedule } from '@ember/runloop';
+import Swiper from 'npm:swiper';
 
 export default Component.extend({
     swiper: null,

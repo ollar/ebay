@@ -1,0 +1,21 @@
+& {
+    padding: 0 0 ms(1);
+    margin: 0 0 ms(1);
+    border-bottom: 1px solid map-get($colours, silver);
+}
+
+.title {
+    font-weight: 600;
+}
+
+.body {
+    color: map-get($colours, gray);
+
+    &:before {
+        content: '\201C';
+    }
+
+    &:after {
+        content: '\201D';
+    }
+}

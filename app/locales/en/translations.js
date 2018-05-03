@@ -56,7 +56,7 @@ export default {
     last_bidder: 'Last bidder - {{bidder.username}}',
     sold_message: 'This item is sold',
 
-    add_comment_button: 'Add your comment',
+    add_comment_button: 'Add comment',
   },
 
   bid: {
@@ -93,15 +93,15 @@ export default {
   },
 
   add_comment: {
-    title: 'Add your comment',
+    title: 'Add comment',
     form: {
       title: {
         label: 'Title',
       },
       body: {
-        label: 'Body'
-      }
-    }
+        label: 'Body',
+      },
+    },
   },
 
   order_block: {

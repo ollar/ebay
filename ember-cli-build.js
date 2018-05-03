@@ -23,7 +23,6 @@ module.exports = function(defaults) {
   app.import('node_modules/normalize.css/normalize.css');
 
   app.import('node_modules/swiper/dist/css/swiper.min.css');
-  app.import('node_modules/swiper/dist/js/swiper.js');
 
   return app.toTree();
 };

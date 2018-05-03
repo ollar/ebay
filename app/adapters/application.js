@@ -7,9 +7,19 @@ import { run } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import trace from '../utils/trace';
 
+import _ from 'npm:lodash/collection';
+
 export default DS.Adapter.extend({
     webrtc: service(),
     namespace: 'ebay',
+
+    shouldReloadAll(/*store, snapshotsArray*/) {
+        return false;
+    },
+
+    shouldBackgroundReloadAll(/*store, snapshotsArray*/) {
+        return true;
+    },
 
     __databases: computed(() => ({})),
 
@@ -71,7 +81,7 @@ export default DS.Adapter.extend({
 
         if (snapshot.record._broadcastOnSave) {
             this.get('webrtc').broadcast(
-                {data, entity: snapshot.modelName},
+                { data, entity: snapshot.modelName },
                 'entity::create'
             );
         }
@@ -101,7 +111,7 @@ export default DS.Adapter.extend({
                 all(keys.map(key => this.findRecord(store, type, key, null)))
             );
     },
-    query(store, type /*query, recordArray*/) {
-        return this.findAll(store, type);
+    query(store, type, query /*recordArray*/) {
+        return this.findAll(store, type).then(items => _.filter(items, query));
     },
 });

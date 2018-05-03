@@ -180,7 +180,7 @@ form textarea {
 }
 
 /* Forms */
-form .form-line {
+.form-line {
     display: flex;
     flex-direction: column;
 
@@ -188,7 +188,7 @@ form .form-line {
         flex-direction: row;
     }
 }
-form .form-line label {
+form label {
     line-height: 2;
     vertical-align: middle;
     margin: 0 1em 0 0;

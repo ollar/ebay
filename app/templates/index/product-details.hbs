@@ -9,7 +9,7 @@
         </button>
     </div>
     <h1 class="title">
-        {{model.title}}
+        {{model.product.title}}
 
         <div class="bids">
             ({{bidsNumber}})
@@ -17,7 +17,7 @@
     </h1>
 
     {{#swiper-container}}
-        {{#each model.images as |image index|}}
+        {{#each model.product.images as |image index|}}
             <div class="swiper-slide">
                 <img class="img" src={{image.base64}} width={{image.width}} height={{image.height}}>
             </div>
@@ -25,14 +25,14 @@
     {{/swiper-container}}
 
     <div class="description">
-        {{model.description}}
+        {{model.product.description}}
     </div>
 
     <div class="price">
-        {{price model.price}}
+        {{price model.product.price}}
     </div>
 
-    {{#unless model.sold}}
+    {{#unless model.product.sold}}
         <div class="buttons-wrapper">
             {{#if isAuthor}}
                 {{#if bidsNumber}}
@@ -53,16 +53,18 @@
 
     <div class="comments">
         <h3>{{t 'product_details.comments_title'}}</h3>
-        {{#each model.comments as |comment|}}
+        {{#each _comments as |comment|}}
             {{comment-list-block comment=comment}}
         {{else}}
-            {{t 'product_details.no_comments'}}
+            <div class="empty">
+                {{t 'product_details.no_comments'}}
+            </div>
         {{/each}}
     </div>
 
 
     {{#if showAddCommentBlock}}
-        {{add-comment-block product=model toggleAddComment=(action 'toggleAddComment')}}
+        {{add-comment-block product=model.product _comments=_comments toggleAddComment=(action 'toggleAddComment')}}
     {{else}}
         <button {{action 'toggleAddComment'}}>{{t 'product_details.add_comment_button'}}</button>
     {{/if}}

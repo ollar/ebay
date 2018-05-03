@@ -45,6 +45,7 @@ h4,
 h5,
 h6 {
     margin: 0;
+    font-weight: normal;
 
     &.title {
         margin-bottom: 1.2em;
@@ -90,4 +91,10 @@ h6 {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+}
+
+.empty {
+    margin: ms(2);
+    text-align: center;
+    color: map-get($colours, grey);
 }

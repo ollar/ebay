@@ -18,5 +18,5 @@ export default DS.Model.extend(WriteBlockMixin, {
     bidStep: DS.attr('number'),
     timestamp: DS.attr('number'),
 
-    comments: computed(() => ([])),
+    comments: computed(() => []),
 });

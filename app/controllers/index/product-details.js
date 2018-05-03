@@ -5,8 +5,8 @@ import { inject as service } from '@ember/service';
 export default Controller.extend({
     session: service(),
     me: computed.readOnly('session.data.authenticated.id'),
-    bidsNumber: computed.readOnly('model.bids.length'),
-    lastBid: computed.readOnly('model.bids.lastObject'),
+    bidsNumber: computed.readOnly('model.product.bids.length'),
+    lastBid: computed.readOnly('model.product.bids.lastObject'),
 
     showAddCommentBlock: false,
 
@@ -16,7 +16,11 @@ export default Controller.extend({
     }),
 
     isAuthor: computed('me', function() {
-        return this.get('model.author') === this.get('me');
+        return this.get('model.product.author') === this.get('me');
+    }),
+
+    _comments: computed('model.comments', function() {
+        return this.get('model.comments').toArray();
     }),
 
     actions: {
@@ -27,7 +31,7 @@ export default Controller.extend({
             window.history.back();
         },
         sell_product() {
-            const product = this.get('model');
+            const product = this.get('model.product');
             const lastBid = this.get('lastBid');
 
             product.set('sold', true);
