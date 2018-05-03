@@ -3,7 +3,7 @@
         {{#if nolink}}
             {{product.title}}
         {{else}}
-            {{link-to product.title 'index.product-details' product}}
+            {{link-to product.title 'index.product-details' product.id}}
         {{/if}}
 
         <div class="bids" title={{t 'index.product-details.bids'}}>

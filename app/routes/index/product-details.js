@@ -6,9 +6,11 @@ export default Route.extend({
     model(params) {
         return hash({
             product: this.get('store').findRecord('product', params.product_id),
-            comments: this.get('store').query('comment', {
-                product: params.product_id,
-            }),
+            comments: this.get('store')
+                .query('comment', {
+                    product: params.product_id,
+                })
+                .then(comments => comments.sortBy('timestamp')),
         });
     },
 
