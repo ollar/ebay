@@ -67,9 +67,19 @@ function bindChannelEventsOnMessage(event) {
             break;
 
         case 'entity::create':
+            if (message.data.entity === 'block') {
+                store
+                    .push(
+                        store.normalize(message.data.entity, message.data.data)
+                    )
+                    .saveApply();
+                break;
+            }
+
             store
                 .push(store.normalize(message.data.entity, message.data.data))
                 .save();
+
             break;
 
         case 'block::index_check':

@@ -60,6 +60,7 @@
     "node": "^4.5 || 6.* || >= 7.*"
   },
   "dependencies": {
+    "date-fns": "^1.29.0",
     "fingerprintjs2": "^1.6.1",
     "localforage": "^1.7.1",
     "normalize.css": "^8.0.0",

@@ -9,6 +9,11 @@ export default {
   //
   // "key.with.interpolation": "Text with {{anInterpolation}}"
 
+  common: {
+    by: 'by',
+    on: 'on',
+  },
+
   links: {
     home: 'Home',
   },

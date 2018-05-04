@@ -12,8 +12,11 @@ export default Controller.extend({
             const file = files[0];
             if (!file.type.match(/(png|jpg|jpeg)/gi)) return;
 
-            imageResize(file, {maxWidth: 96, maxHeight: 96}).then(image => {
-                const userImage = this.get('store').createRecord('image', image);
+            imageResize(file, { maxWidth: 96, maxHeight: 96 }).then(image => {
+                const userImage = this.get('store').createRecord(
+                    'image',
+                    image
+                );
 
                 this.get('model.images').pushObject(userImage);
                 this.set('imageId', userImage.id);
@@ -23,17 +26,18 @@ export default Controller.extend({
             if (!this.get('model.username')) return;
 
             this.get('model.images').forEach(image => image.save());
-            this.get('model').save();
 
-            this.get('session')
-                .authenticate('authenticator:local', {
-                    modelId: this.get('model.id'),
-                })
-                .then(() => {
-                    this.transitionToRoute('index');
-                });
-
-            return;
+            return this.get('model')
+                .save()
+                .then(model =>
+                    this.get('session')
+                        .authenticate('authenticator:local', {
+                            modelId: model.get('id'),
+                        })
+                        .then(() => {
+                            this.transitionToRoute('index');
+                        })
+                );
         },
     },
 });

@@ -1,3 +1,15 @@
+<div class="meta">
+    {{#if author}}
+        {{t 'common.by'}}
+        {{icon-image data=author.firstObject _size=24}}
+        <span class="author">{{author.firstObject.username}}</span>,
+    {{/if}}
+    {{t 'common.on'}}
+    <span class="date">
+        {{format-date comment.timestamp 'h:mm:ss A, Do MMM'}}
+    </span>
+</div>
+
 <h4 class="title">
     {{comment.title}}
 </h4>
@@ -5,8 +17,5 @@
 <div class="body">
     {{comment.body}}
 </div>
-
-
-
 
 {{yield}}

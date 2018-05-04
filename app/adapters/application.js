@@ -2,7 +2,7 @@ import DS from 'ember-data';
 
 import localforage from 'npm:localforage';
 import { computed } from '@ember/object';
-import { all } from 'rsvp';
+import { all, resolve } from 'rsvp';
 import { run } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import trace from '../utils/trace';
@@ -13,6 +13,11 @@ export default DS.Adapter.extend({
     webrtc: service(),
     storeEvents: service(),
     namespace: 'ebay',
+
+    // shouldBackgroundReloadAll
+    // shouldBackgroundReloadRecord
+    // shouldReloadAll
+    // shouldReloadRecord
 
     shouldReloadAll(/*store, snapshotsArray*/) {
         return false;
@@ -149,7 +154,7 @@ export default DS.Adapter.extend({
                 snapshot
             );
 
-            return true;
+            return resolve();
         });
     },
     findAll(store, type /*sinceToken, snapshotRecordArray*/) {

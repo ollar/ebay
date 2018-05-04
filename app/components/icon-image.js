@@ -30,6 +30,7 @@ export default Component.extend({
     image: computed.readOnly('data.images.firstObject'),
 
     initials: computed('name', function() {
+        if (!this.get('name')) return '';
         return this.get('name')
             .trim()
             .split(' ')
