@@ -19,3 +19,19 @@
         content: '\201D';
     }
 }
+
+.meta {
+    display: flex;
+    font-size: 0.85rem;
+    color: map-get($colours, gray);
+}
+
+.author-wrapper {
+    display: flex;
+    margin-left: 10px;
+    margin-right: auto;
+}
+
+.icon-image {
+    margin-right: 5px;
+}

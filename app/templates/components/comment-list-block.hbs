@@ -1,8 +1,10 @@
 <div class="meta">
     {{#if author}}
         {{t 'common.by'}}
-        {{icon-image data=author.firstObject _size=24}}
-        <span class="author">{{author.firstObject.username}}</span>,
+        <span class="author-wrapper">
+            {{icon-image data=author.firstObject _size=24}}
+            <span class="author">{{author.firstObject.username}}</span>,
+        </span>
     {{/if}}
     {{t 'common.on'}}
     <span class="date">
