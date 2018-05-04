@@ -11,6 +11,7 @@ import _ from 'npm:lodash/collection';
 
 export default DS.Adapter.extend({
     webrtc: service(),
+    storeEvents: service(),
     namespace: 'ebay',
 
     shouldReloadAll(/*store, snapshotsArray*/) {
@@ -59,6 +60,11 @@ export default DS.Adapter.extend({
     findRecord(store, type, id, snapshot, opts = {}) {
         const db = this._getModelDb(this._modelNamespace(type));
 
+        this.get('storeEvents').trigger('before::findRecord');
+        this.get('storeEvents').trigger(
+            `before::findRecord::${this._modelNamespace(type)}`
+        );
+
         // check if item no found
         return db
             .getItem(id)
@@ -79,6 +85,12 @@ export default DS.Adapter.extend({
         const db = this._getModelDb(this._modelNamespace(type));
         const data = snapshot.serialize();
 
+        this.get('storeEvents').trigger('before::createRecord', snapshot);
+        this.get('storeEvents').trigger(
+            `before::createRecord::${this._modelNamespace(type)}`,
+            snapshot
+        );
+
         if (snapshot.record._broadcastOnSave) {
             this.get('webrtc').broadcast(
                 { data, entity: snapshot.modelName },
@@ -86,22 +98,59 @@ export default DS.Adapter.extend({
             );
         }
 
-        return db.setItem(data.id, data);
+        return db.setItem(data.id, data).then(record => {
+            this.get('storeEvents').trigger('createRecord', record);
+            this.get('storeEvents').trigger(
+                `createRecord::${this._modelNamespace(type)}`,
+                record
+            );
+
+            return record;
+        });
     },
     updateRecord(store, type, snapshot) {
         var data = this.serialize(snapshot);
         var id = snapshot.id;
         const db = this._getModelDb(this._modelNamespace(type));
 
+        this.get('storeEvents').trigger('before::updateRecord', snapshot);
+        this.get('storeEvents').trigger(
+            `before::updateRecord::${this._modelNamespace(type)}`,
+            snapshot
+        );
+
         return this.findRecord(store, type, id, snapshot, { quite: true })
             .then(record => Object.assign({}, record, data))
-            .then(newRecord => db.setItem(id, newRecord));
+            .then(newRecord => db.setItem(id, newRecord))
+            .then(newRecord => {
+                this.get('storeEvents').trigger('updateRecord', newRecord);
+                this.get('storeEvents').trigger(
+                    `updateRecord::${this._modelNamespace(type)}`,
+                    newRecord
+                );
+
+                return newRecord;
+            });
     },
     deleteRecord(store, type, snapshot) {
         const db = this._getModelDb(this._modelNamespace(type));
         const data = snapshot.serialize();
 
-        return db.removeItem(data.id);
+        this.get('storeEvents').trigger('before::deleteRecord', snapshot);
+        this.get('storeEvents').trigger(
+            `before::deleteRecord::${this._modelNamespace(type)}`,
+            snapshot
+        );
+
+        return db.removeItem(data.id).then(() => {
+            this.get('storeEvents').trigger('deleteRecord', snapshot);
+            this.get('storeEvents').trigger(
+                `deleteRecord::${this._modelNamespace(type)}`,
+                snapshot
+            );
+
+            return true;
+        });
     },
     findAll(store, type /*sinceToken, snapshotRecordArray*/) {
         const db = this._getModelDb(this._modelNamespace(type));

@@ -19,10 +19,6 @@ export default Controller.extend({
         return this.get('model.product.author') === this.get('me');
     }),
 
-    _comments: computed('model.comments', function() {
-        return this.get('model.comments').toArray();
-    }),
-
     actions: {
         toggleAddComment() {
             this.toggleProperty('showAddCommentBlock');

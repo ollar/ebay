@@ -22,8 +22,6 @@ export default Component.extend({
                 product: this.get('product'),
             });
 
-            this.get('_comments').pushObject(this.get('model'));
-
             this.get('model').save();
             this.set('model', this.get('store').createRecord('comment'));
             this.toggleAddComment();

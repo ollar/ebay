@@ -1,8 +1,9 @@
 import Route from '@ember/routing/route';
-
+import { inject as service } from '@ember/service';
 import { hash } from 'rsvp';
 
 export default Route.extend({
+    storeEvents: service(),
     model(params) {
         return hash({
             product: this.get('store').findRecord('product', params.product_id),
@@ -15,11 +16,8 @@ export default Route.extend({
     },
 
     activate() {
-        // this.controllerFor(this.fullRouteName).set(
-        //     'comments',
-        //     this.get('store').query('comment', {
-        //         product: this.get('model.id'),
-        //     })
-        // );
+        this.get('storeEvents').on('createRecord::comment', () =>
+            this.refresh()
+        );
     },
 });
