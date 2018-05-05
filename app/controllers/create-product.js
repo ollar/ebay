@@ -31,8 +31,7 @@ export default Controller.extend({
 
             this.get('model.images').forEach(image => image.save());
 
-            model.save();
-            this.transitionToRoute('index');
+            return model.save().then(() => this.transitionToRoute('index'));
         },
     },
 });

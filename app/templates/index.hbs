@@ -4,6 +4,8 @@
 {{/each}}
 </div>
 
+{{log model.products}}
+
 {{#each model.products as |product|}}
     {{product-block product=product}}
 {{else}}

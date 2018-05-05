@@ -82,6 +82,8 @@ export default DS.Adapter.extend({
         const db = this._getModelDb(this._modelNamespace(type));
         const data = snapshot.serialize();
 
+        console.log('createRecord');
+
         this.get('storeEvents').trigger('before::createRecord', snapshot);
         this.get('storeEvents').trigger(
             `before::createRecord::${this._modelNamespace(type)}`,
@@ -110,6 +112,8 @@ export default DS.Adapter.extend({
         var id = snapshot.id;
         const db = this._getModelDb(this._modelNamespace(type));
 
+        console.log('updateRecord');
+
         this.get('storeEvents').trigger('before::updateRecord', snapshot);
         this.get('storeEvents').trigger(
             `before::updateRecord::${this._modelNamespace(type)}`,
@@ -118,16 +122,17 @@ export default DS.Adapter.extend({
 
         return this.findRecord(store, type, id, snapshot, { quite: true })
             .then(record => Object.assign({}, record, data))
-            .then(newRecord => db.setItem(id, newRecord))
-            .then(newRecord => {
-                this.get('storeEvents').trigger('updateRecord', newRecord);
-                this.get('storeEvents').trigger(
-                    `updateRecord::${this._modelNamespace(type)}`,
-                    newRecord
-                );
+            .then(newRecord =>
+                db.setItem(id, newRecord).then(newRecord => {
+                    this.get('storeEvents').trigger('updateRecord', newRecord);
+                    this.get('storeEvents').trigger(
+                        `updateRecord::${this._modelNamespace(type)}`,
+                        newRecord
+                    );
 
-                return newRecord;
-            });
+                    return newRecord;
+                })
+            );
     },
     deleteRecord(store, type, snapshot) {
         const db = this._getModelDb(this._modelNamespace(type));
