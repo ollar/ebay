@@ -37,7 +37,19 @@ export default Controller.extend({
                         .then(() => {
                             this.transitionToRoute('index');
                         })
-                );
+                )
+                .then(() => {
+                    this.send('notify', {
+                        type: 'success',
+                        text: 'sex',
+                    });
+                })
+                .catch(e => {
+                    this.send('notify', {
+                        type: 'error',
+                        text: e.toString(),
+                    });
+                });
         },
     },
 });
