@@ -16,6 +16,14 @@
         {{/each}}
     </div>
 
+    <ul class="form-errors">
+        {{#each model.errors as |error|}}
+            <li>
+                {{error.attribute}}: {{error.message}}
+            </li>
+        {{/each}}
+    </ul>
+
     <div class="form-line">
         <label for="username">{{t 'login.form.username.label'}}</label>
         {{input name="username" value=model.username}}

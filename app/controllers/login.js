@@ -23,7 +23,7 @@ export default Controller.extend({
             });
         },
         submit() {
-            if (!this.get('model.username')) return;
+            if (!this.get('model').validate()) return;
 
             this.get('model.images').forEach(image => image.save());
 

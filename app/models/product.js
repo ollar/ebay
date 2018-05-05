@@ -1,9 +1,11 @@
 import DS from 'ember-data';
 
 import WriteBlockMixin from '../mixins/write-block';
+import Validator from '../mixins/model-validator';
+
 import { computed } from '@ember/object';
 
-export default DS.Model.extend(WriteBlockMixin, {
+export default DS.Model.extend(WriteBlockMixin, Validator, {
     title: DS.attr('string'),
     description: DS.attr('string'),
     price: DS.attr('number'),
@@ -19,4 +21,18 @@ export default DS.Model.extend(WriteBlockMixin, {
     timestamp: DS.attr('number'),
 
     comments: computed(() => []),
+
+    validations: computed(() => ({
+        title: {
+            presence: true,
+        },
+
+        description: {
+            presence: true,
+        },
+
+        price: {
+            presence: true,
+        },
+    })),
 });

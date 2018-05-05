@@ -49,9 +49,11 @@
     "ember-i18n": "^5.2.0",
     "ember-load-initializers": "^1.0.0",
     "ember-maybe-import-regenerator": "^0.1.6",
+    "ember-model-validator": "^2.18.0",
     "ember-resolver": "^4.0.0",
     "ember-simple-auth": "^1.5.1",
     "ember-source": "~3.0.0",
+    "ember-web-app": "^2.3.0",
     "eslint-plugin-ember": "^5.0.0",
     "loader.js": "^4.2.3",
     "prettier": "^1.11.1"

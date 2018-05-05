@@ -10,7 +10,10 @@ export default Controller.extend({
                 if (!file.type.match(/(png|jpg|jpeg)/gi)) return;
 
                 imageResize(file).then(image => {
-                    const _image = this.get('store').createRecord('image', image);
+                    const _image = this.get('store').createRecord(
+                        'image',
+                        image
+                    );
 
                     this.get('model.images').addObject(_image);
                 });
@@ -21,6 +24,9 @@ export default Controller.extend({
         },
         submit() {
             const model = this.get('model');
+
+            if (!model.validate()) return;
+
             model.set('author', this.get('session.data.authenticated.id'));
 
             this.get('model.images').forEach(image => image.save());

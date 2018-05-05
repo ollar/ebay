@@ -8,9 +8,19 @@
     {{#each model.images as |image|}}
         <div class="image-wrapper">
             <img class="img" src={{image.base64}} width={{image.width}} height={{image.height}}>
-            <button class="remove" type="button" {{action 'removeImage' image}}>remove</button>
+            <button class="remove icon-button" type="button" {{action 'removeImage' image}}>
+                {{icons/icon-close size=24}}
+            </button>
         </div>
     {{/each}}
+
+    <ul class="form-errors">
+        {{#each model.errors as |error|}}
+            <li>
+                {{error.attribute}}: {{error.message}}
+            </li>
+        {{/each}}
+    </ul>
 
     <div class="form-line">
         <label for="title">{{t 'create_product.form.title.label'}}</label>

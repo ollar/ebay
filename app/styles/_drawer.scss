@@ -13,6 +13,10 @@
                 display: block;
             }
         }
+
+        .active {
+            color: map-get($colours, blue);
+        }
     }
 }
 
@@ -38,3 +42,4 @@
 
 .drawer-toggle-button {
 }
+
