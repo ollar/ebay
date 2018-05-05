@@ -1,6 +1,6 @@
 import Base from 'ember-simple-auth/authenticators/base';
 import { inject as service } from '@ember/service';
-import { all } from 'rsvp';
+import { all, resolve } from 'rsvp';
 
 import Fingerprint2 from 'npm:fingerprintjs2';
 
@@ -10,7 +10,7 @@ export default Base.extend({
 
     restore(data) {
         this.get('websockets').connect();
-        return Promise.resolve(data);
+        return resolve(data);
     },
 
     authenticate(args) {
@@ -22,28 +22,16 @@ export default Base.extend({
                 const me = this.get('store').peekRecord('user', args.modelId);
                 me.set('fingerprint', result);
                 me.set('isMe', true);
-                me.save();
-
-                res(args);
+                me.save().then(() => res(args));
             });
         });
     },
 
     invalidate(data) {
         return this.get('store')
-            .findRecord('user', data.modelId)
-            .then(me => {
-                this.get('websockets').disconnect();
-
-                if (me) {
-                    return all(
-                        me.get('images').map(image => image.destroyRecord())
-                    ).then(() => me.destroyRecord());
-                } else {
-                    const users = this.get('store').peekAll('user');
-
-                    return all(users.map(user => user.destroyRecord()));
-                }
+            .findAll('user')
+            .then(users => {
+                all(users.map(user => user.destroyRecord()));
             });
     },
 });

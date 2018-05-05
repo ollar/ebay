@@ -76,8 +76,8 @@ function bindChannelEventsOnMessage(event) {
                     entity.saveApply();
                     break;
 
-                case 'user':
-                    break;
+                // case 'user':
+                //     break;
 
                 default:
                     entity.save();

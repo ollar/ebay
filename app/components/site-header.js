@@ -9,7 +9,10 @@ export default Component.extend({
     store: service(),
 
     me: computed('session.isAuthenticated', function() {
-        const id = this.getWithDefault('session.data.authenticated.modelId', '');
+        const id = this.getWithDefault(
+            'session.data.authenticated.modelId',
+            ''
+        );
         return this.get('store').peekRecord('user', id);
     }),
 
@@ -20,9 +23,7 @@ export default Component.extend({
         invalidateSession() {
             this.get('session')
                 .invalidate()
-                .then(() => {
-                    this.get('router').transitionTo('login');
-                });
+                .then(() => this.get('router').transitionTo('login'));
         },
     },
 });

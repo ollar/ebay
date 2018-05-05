@@ -19,5 +19,14 @@ export default Route.extend({
         this.get('storeEvents').on('createRecord::comment', () =>
             this.refresh()
         );
+
+        this.get('storeEvents').on('updateRecord::comment', () =>
+            this.refresh()
+        );
+    },
+
+    deactivate() {
+        this.get('storeEvents').off('createRecord::comment');
+        this.get('storeEvents').off('updateRecord::comment');
     },
 });

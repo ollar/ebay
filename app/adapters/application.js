@@ -2,7 +2,7 @@ import DS from 'ember-data';
 
 import localforage from 'npm:localforage';
 import { computed } from '@ember/object';
-import { all, resolve } from 'rsvp';
+import { all } from 'rsvp';
 import { run } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import trace from '../utils/trace';
@@ -14,18 +14,10 @@ export default DS.Adapter.extend({
     storeEvents: service(),
     namespace: 'ebay',
 
-    // shouldBackgroundReloadAll
-    // shouldBackgroundReloadRecord
-    // shouldReloadAll
-    // shouldReloadRecord
-
-    shouldReloadAll(/*store, snapshotsArray*/) {
-        return false;
-    },
-
-    shouldBackgroundReloadAll(/*store, snapshotsArray*/) {
-        return true;
-    },
+    shouldReloadRecord: (/*store, snapshot*/) => true,
+    shouldReloadAll: (/*store, snapshotsArray*/) => true,
+    shouldBackgroundReloadRecord: (/*store, snapshot*/) => true,
+    shouldBackgroundReloadAll: (/*store, snapshotsArray*/) => true,
 
     __databases: computed(() => ({})),
 
@@ -154,7 +146,7 @@ export default DS.Adapter.extend({
                 snapshot
             );
 
-            return resolve();
+            return true;
         });
     },
     findAll(store, type /*sinceToken, snapshotRecordArray*/) {
@@ -162,7 +154,9 @@ export default DS.Adapter.extend({
         return db
             .keys()
             .then(keys =>
-                all(keys.map(key => this.findRecord(store, type, key, null)))
+                all(
+                    keys.map(key => this.findRecord(store, type, key, null))
+                ).then(recs => recs)
             );
     },
     query(store, type, query /*recordArray*/) {

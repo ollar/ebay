@@ -11,13 +11,17 @@
         </div>
     </h3>
 
+    {{#link-to 'index.product-details' product.id}}
     {{#swiper-container}}
+
         {{#each product.images as |image|}}
             <div class="swiper-slide">
                 <img class="img" src={{image.base64}} width={{image.width}} height={{image.height}}>
             </div>
         {{/each}}
+
     {{/swiper-container}}
+    {{/link-to}}
 
     <div class="description">
         {{product.description}}

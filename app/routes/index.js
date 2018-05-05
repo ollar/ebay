@@ -4,13 +4,13 @@ import { hash } from 'rsvp';
 export default Route.extend({
     model() {
         return hash({
-            products: this.get('store')
-                .findAll('product', { reload: true })
-                .then(products =>
-                    products.filter(product => !product.get('sold'))
-                ),
+            products: this.get('store').query('product', { sold: false }),
             blocks: this.get('store').findAll('block', { reload: true }),
-            users: this.get('store').findAll('user'),
+            users: this.get('store')
+                .findAll('user')
+                .then(users =>
+                    users.filter(user => user.get('isMe') === false)
+                ),
             bids: this.get('store').findAll('bid'),
         });
     },
