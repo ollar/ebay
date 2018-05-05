@@ -1,0 +1,8 @@
+.users-list {
+    position: sticky;
+    display: flex;
+    top: 0;
+    z-index: 9;
+    padding: ms(0);
+    flex-wrap: wrap;
+}

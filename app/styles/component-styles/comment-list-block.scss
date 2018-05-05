@@ -24,6 +24,11 @@
     display: flex;
     font-size: 0.85rem;
     color: map-get($colours, gray);
+    margin-bottom: ms(1);
+}
+
+.title {
+    margin-bottom: ms(-1);
 }
 
 .author-wrapper {

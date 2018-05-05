@@ -67,18 +67,22 @@ function bindChannelEventsOnMessage(event) {
             break;
 
         case 'entity::create':
-            if (message.data.entity === 'block') {
-                store
-                    .push(
-                        store.normalize(message.data.entity, message.data.data)
-                    )
-                    .saveApply();
-                break;
-            }
+            var entity = store.push(
+                store.normalize(message.data.entity, message.data.data)
+            );
 
-            store
-                .push(store.normalize(message.data.entity, message.data.data))
-                .save();
+            switch (message.data.entity) {
+                case 'block':
+                    entity.saveApply();
+                    break;
+
+                case 'user':
+                    break;
+
+                default:
+                    entity.save();
+                    break;
+            }
 
             break;
 
