@@ -82,8 +82,6 @@ export default DS.Adapter.extend({
         const db = this._getModelDb(this._modelNamespace(type));
         const data = snapshot.serialize();
 
-        console.log('createRecord');
-
         this.get('storeEvents').trigger('before::createRecord', snapshot);
         this.get('storeEvents').trigger(
             `before::createRecord::${this._modelNamespace(type)}`,
@@ -111,8 +109,6 @@ export default DS.Adapter.extend({
         var data = this.serialize(snapshot);
         var id = snapshot.id;
         const db = this._getModelDb(this._modelNamespace(type));
-
-        console.log('updateRecord');
 
         this.get('storeEvents').trigger('before::updateRecord', snapshot);
         this.get('storeEvents').trigger(

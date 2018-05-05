@@ -5,7 +5,6 @@ import { hash } from 'rsvp';
 export default Route.extend({
     storeEvents: service(),
     model() {
-        console.log('assa');
         return hash({
             products: this.get('store').query('product', { sold: false }),
             blocks: this.get('store').findAll('block'),
@@ -19,16 +18,13 @@ export default Route.extend({
     },
 
     activate() {
-        console.log('activate');
-        this.get('storeEvents').on('createRecord::product', () => {
-            console.log('createRecord::product');
-            this.refresh();
-        });
+        this.get('storeEvents').on('createRecord::product', () =>
+            this.refresh()
+        );
 
-        this.get('storeEvents').on('updateRecord::product', () => {
-            console.log('updateRecord::product');
-            this.refresh();
-        });
+        this.get('storeEvents').on('updateRecord::product', () =>
+            this.refresh()
+        );
     },
 
     deactivate() {
