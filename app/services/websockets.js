@@ -5,7 +5,7 @@ import { computed } from '@ember/object';
 import str from '../utils/str';
 
 export default Service.extend({
-    bathPath: 'ws://0.0.0.0:8765/',
+    bathPath: 'ws://206.189.15.231:7777/',
     authenticated: computed.readOnly('session.data.authenticated'),
 
     webrtc: service(),
