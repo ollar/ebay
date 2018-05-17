@@ -147,7 +147,7 @@ export default DS.Adapter.extend({
                 snapshot
             );
 
-            return true;
+            return snapshot;
         });
     },
     findAll(store, type /*sinceToken, snapshotRecordArray*/) {
